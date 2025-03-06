@@ -5,7 +5,13 @@ import { useNavigate } from 'react-router-dom';
 const AuthForm = ({ type }: { type: 'login' | 'signup' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
+  const [zipCode, setZipCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { login, signup } = useAuth();
@@ -16,7 +22,7 @@ const AuthForm = ({ type }: { type: 'login' | 'signup' }) => {
 
     try {
       if (type === 'signup') {
-        await signup(email, password, name);
+        await signup(email, password, firstName, lastName, phone, address, city, country, zipCode);
       } else {
         await login(email, password);
       }
@@ -31,14 +37,64 @@ const AuthForm = ({ type }: { type: 'login' | 'signup' }) => {
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
         <h2 className="text-xl font-bold mb-4">{type === 'signup' ? 'Sign Up' : 'Login'}</h2>
         {type === 'signup' && (
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full p-2 mb-2 border rounded"
-            required
-          />
+        <>
+        <input
+          type="text"
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Phone NO"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Home Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="City"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Country"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Zip Code"
+          value={zipCode}
+          onChange={(e) => setZipCode(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+      </>
         )}
         <input
           type="email"

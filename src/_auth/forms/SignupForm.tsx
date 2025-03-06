@@ -5,7 +5,13 @@ import { useNavigate } from 'react-router-dom';
 const SignupForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
+  const [zipCode, setZipCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { signup } = useAuth();
@@ -13,10 +19,10 @@ const SignupForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
+  
     try {
-      await signup(email, password, name);
-      navigate('/dashboard'); // Redirect after successful signup
+      await signup(email, password, firstName, lastName, phone, address, city, country, zipCode);
+      navigate('/dashboard');
     } catch (err) {
       setError((err as Error).message);
     }
@@ -28,9 +34,17 @@ const SignupForm = () => {
         <h2 className="text-xl font-bold mb-4">Sign Up</h2>
         <input
           type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
           className="w-full p-2 mb-2 border rounded"
           required
         />
@@ -39,6 +53,46 @@ const SignupForm = () => {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Phone NO"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Home Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="City"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Country"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          className="w-full p-2 mb-2 border rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Zip Code"
+          value={zipCode}
+          onChange={(e) => setZipCode(e.target.value)}
           className="w-full p-2 mb-2 border rounded"
           required
         />
