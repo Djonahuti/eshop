@@ -1,12 +1,12 @@
 import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 
 const SigninForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -15,7 +15,7 @@ const SigninForm = () => {
 
     try {
       await login(email, password);
-      navigate('/dashboard'); // Redirect after successful login
+      //navigate('/dashboard'); // Redirect after successful login
     } catch (err) {
       setError((err as Error).message);
     }
