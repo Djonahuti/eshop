@@ -15,7 +15,7 @@ function App() {
     <div className="hidden md:block"><Navbar /></div>
     <div className="md:hidden"><Topbar /></div>
     <Routes>
-      <Route path="/signin" element={<SigninForm />} />
+      <Route path="/login" element={<SigninForm />} />
       <Route path="/signup" element={<SignupForm />} />
       <Route path="/admin-dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       <Route path="/" element={<Home />} />
