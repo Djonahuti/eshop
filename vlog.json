@@ -1,0 +1,133 @@
+{
+    "collections": [
+      {
+        "name": "Saves",
+        "id": "saves",
+        "attributes": [
+          {
+            "key": "user",
+            "type": "relationship",
+            "relatedCollection": "Users",
+            "attributeKey": "save"
+          },
+          {
+            "key": "post",
+            "type": "relationship",
+            "relatedCollection": "Posts",
+            "attributeKey": "save"
+          }
+        ]
+      },
+      {
+        "name": "Users",
+        "id": "users",
+        "attributes": [
+          {
+            "key": "posts",
+            "type": "relationship",
+            "relatedCollection": "Posts",
+            "attributeKey": "creator"
+          },
+          {
+            "key": "liked",
+            "type": "relationship",
+            "relatedCollection": "Posts",
+            "attributeKey": "likes"
+          },
+          {
+            "key": "name",
+            "type": "string",
+            "size": 2200
+          },
+          {
+            "key": "username",
+            "type": "string",
+            "size": 2200
+          },
+          {
+            "key": "accountId",
+            "type": "string",
+            "size": 2200,
+            "required": true
+          },
+          {
+            "key": "email",
+            "type": "email",
+            "required": true
+          },
+          {
+            "key": "bio",
+            "type": "string",
+            "size": 2200
+          },
+          {
+            "key": "imageId",
+            "type": "string",
+            "size": 2200
+          },
+          {
+            "key": "imageUrl",
+            "type": "url",
+            "required": true
+          },
+          {
+            "key": "save",
+            "type": "relationship",
+            "relatedCollection": "Saves",
+            "attributeKey": "user"
+          }
+        ]
+      },
+      {
+        "name": "Posts",
+        "id": "posts",
+        "attributes": [
+          {
+            "key": "creator",
+            "type": "relationship",
+            "relatedCollection": "Users",
+            "attributeKey": "posts"
+          },
+          {
+            "key": "likes",
+            "type": "relationship",
+            "relatedCollection": "Users",
+            "attributeKey": "liked"
+          },
+          {
+            "key": "save",
+            "type": "relationship",
+            "relatedCollection": "Saves",
+            "attributeKey": "post"
+          },
+          {
+            "key": "caption",
+            "type": "string",
+            "size": 2200
+          },
+          {
+            "key": "tags",
+            "type": "string",
+            "size": 2200,
+            "array": true
+          },
+          {
+            "key": "imageUrl",
+            "type": "url",
+            "required": true
+          },
+          {
+            "key": "imageId",
+            "type": "string",
+            "size": 2200
+          },
+          {
+            "key": "location",
+            "type": "string",
+            "size": 2200
+          }
+        ]
+      }
+    ]
+  }
+  
