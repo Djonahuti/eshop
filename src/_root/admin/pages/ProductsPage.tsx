@@ -53,7 +53,11 @@ export const ProductsPage = () => {
               <TableCell>{product.description}</TableCell>
               <TableCell>{product.features}</TableCell>
               <TableCell>{product.label}</TableCell>
-              <TableCell>{product.categories.map((cat) => cat.name).join(", ")}</TableCell>
+              <TableCell>
+                {product.categories.length > 0 
+                  ? product.categories.map((cat) => cat.name).join(", ") 
+                  : "No Category"}
+              </TableCell>
               <TableCell>
                         {product.images.map((img, index) => (
                           <img key={index} src={img} alt="Product" width="50" />
