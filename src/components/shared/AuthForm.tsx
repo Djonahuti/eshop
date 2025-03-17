@@ -5,16 +5,21 @@ import { useNavigate } from 'react-router-dom';
 const AuthForm = ({ type }: { type: 'login' | 'signup' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
-  const [zipCode, setZipCode] = useState('');
+  const [customerImage, setCustomerImage] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { login, signup } = useAuth();
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setCustomerImage(e.target.files[0]);
+  }
+}
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,11 +27,11 @@ const AuthForm = ({ type }: { type: 'login' | 'signup' }) => {
 
     try {
       if (type === 'signup') {
-        await signup(email, password, firstName, lastName, phone, address, city, country, zipCode);
+        await signup(email, password, customerName, phone, address, city, country, customerImage);
       } else {
         await login(email, password);
       }
-      navigate('/dashboard'); // Redirect after authentication
+      navigate('/'); // Redirect after authentication
     } catch (err) {
       setError((err as Error).message);
     }
@@ -40,20 +45,13 @@ const AuthForm = ({ type }: { type: 'login' | 'signup' }) => {
         <>
         <input
           type="text"
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="Full Name"
+          value={customerName}
+          onChange={(e) => setCustomerName(e.target.value)}
           className="w-full p-2 mb-2 border rounded"
           required
         />
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
+        <input type="file" onChange={handleImageUpload} accept="image/*" required />
         <input
           type="text"
           placeholder="Phone NO"
@@ -83,14 +81,6 @@ const AuthForm = ({ type }: { type: 'login' | 'signup' }) => {
           placeholder="Country"
           value={country}
           onChange={(e) => setCountry(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Zip Code"
-          value={zipCode}
-          onChange={(e) => setZipCode(e.target.value)}
           className="w-full p-2 mb-2 border rounded"
           required
         />

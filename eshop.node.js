@@ -79,7 +79,7 @@ async function createCollections() {
                   { key: 'product_img3', type: 'url' },
                   { key: 'product_url', type: 'url' },
                   { key: 'p_cat_id', type: 'relationship', relatedCollection: 'product_categories' }, //Relationship (One-to-Many) → product_categories
-                  { key: 'category_id', type: 'relationship', relatedCollection: 'categories' }, //Relationship (One-to-Many) → categories
+                  { key: 'cat_id', type: 'relationship', relatedCollection: 'categories' }, //Relationship (One-to-Many) → categories
                   { key: 'manufacturer_id', type: 'relationship', relatedCollection: 'manufacturers' } //Relationship (One-to-Many) → manufacturers
               ]
           },

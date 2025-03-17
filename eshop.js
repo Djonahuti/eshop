@@ -3,7 +3,7 @@ const collections = [
         name: 'Admins',
         id: 'admins',
         attributes: [
-            { key: 'admin_name', type: 'string', size: 255 },
+            { key: 'admin_name', type: 'string', size: 2550 },
             { key: 'admin_email', type: 'email' },
             { key: 'admin_pass', type: 'string', size: 255 },
             { key: 'admin_image', type: 'url' },
@@ -50,15 +50,17 @@ const collections = [
             { key: 'product_price', type: 'integer' },
             { key: 'product_psp_price', type: 'integer' },
             { key: 'product_desc', type: 'string' },
+            { key: 'product_features', type: 'string', array: true },
             { key: 'product_keywords', type: 'string' },
             { key: 'product_label', type: 'string' },
             { key: 'status', type: 'string' },
             { key: 'product_img1', type: 'url' },
             { key: 'product_img2', type: 'url' },
             { key: 'product_img3', type: 'url' },
-            { key: 'product_url', type: 'url' },
+            { key: 'product_video', type: 'url' },
+            { key: 'product_url', type: 'string' },
             { key: 'p_cat_id', type: 'relationship', relatedCollection: 'product_categories' }, //Relationship (One-to-Many) → product_categories
-            { key: 'category_id', type: 'relationship', relatedCollection: 'categories' }, //Relationship (One-to-Many) → categories
+            { key: 'cat_id', type: 'relationship', relatedCollection: 'categories' }, //Relationship (One-to-Many) → categories
             { key: 'manufacturer_id', type: 'relationship', relatedCollection: 'manufacturers' } //Relationship (One-to-Many) → manufacturers
         ]
     },
@@ -67,7 +69,8 @@ const collections = [
         id: 'categories',
         attributes: [
             { key: 'cat_title', type: 'string', size: 255 },
-            { key: 'cat_top', type: 'boolean', default: false }
+            { key: 'cat_top', type: 'boolean', default: false },
+            { key: 'cat_image', type: 'url' },
         ]
     },
     {

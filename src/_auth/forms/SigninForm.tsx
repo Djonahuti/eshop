@@ -15,7 +15,7 @@ const SigninForm = () => {
 
     try {
       await login(email, password);
-      //navigate('/dashboard'); // Redirect after successful login
+      //navigate('/'); // Redirect after successful login
     } catch (err) {
       setError((err as Error).message);
     }

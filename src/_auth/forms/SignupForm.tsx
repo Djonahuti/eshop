@@ -5,24 +5,29 @@ import { useNavigate } from 'react-router-dom';
 const SignupForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
-  const [zipCode, setZipCode] = useState('');
+  const [customerImage, setCustomerImage] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { signup } = useAuth();
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setCustomerImage(e.target.files[0]);
+  }
+}
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
   
     try {
-      await signup(email, password, firstName, lastName, phone, address, city, country, zipCode);
-      navigate('/dashboard');
+      await signup(email, password, customerName, phone, address, city, country, customerImage);
+      navigate('/');
     } catch (err) {
       setError((err as Error).message);
     }
@@ -34,20 +39,13 @@ const SignupForm = () => {
         <h2 className="text-xl font-bold mb-4">Sign Up</h2>
         <input
           type="text"
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="Full Name"
+          value={customerName}
+          onChange={(e) => setCustomerName(e.target.value)}
           className="w-full p-2 mb-2 border rounded"
           required
         />
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
+        <input type="file" onChange={handleImageUpload} accept="image/*" required />
         <input
           type="email"
           placeholder="Email"
@@ -85,14 +83,6 @@ const SignupForm = () => {
           placeholder="Country"
           value={country}
           onChange={(e) => setCountry(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Zip Code"
-          value={zipCode}
-          onChange={(e) => setZipCode(e.target.value)}
           className="w-full p-2 mb-2 border rounded"
           required
         />
