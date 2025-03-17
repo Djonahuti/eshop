@@ -102,7 +102,7 @@ export const getCategories = async () => {
 
     return response.documents.map((doc) => ({
       id: doc.$id,
-      name: doc.category_name, // Make sure `category_name` matches your database field
+      name: doc.cat_title, // Make sure `category_name` matches your database field
     }));
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -245,33 +245,55 @@ export const addProduct = async ({
 export const getProducts = async () => {
   try {
     const categoryList = await getCategories(); // Fetch categories
-    const categoryMap = categoryList.reduce((map, category) => {
-      map[category.id] = category.name;
-      return map;
-    }, {} as Record<string, string>); // Convert array to object { id: name }
+
+    console.log("Fetched Categories:", categoryList); // Debugging
+
+    // Create category map { category_id: category_name }
+    const categoryMap: Record<string, string> = categoryList.reduce(
+      (map, category) => {
+        map[category.id] = category.name;
+        return map;
+      },
+      {} as Record<string, string>
+    );
+
+    console.log("Category Map:", categoryMap); // Debugging
 
     const response = await database.listDocuments(DB_ID, PRODUCTS_COLLECTION_ID);
-    return response.documents.map((doc) => ({
-      id: doc.$id,
-      name: doc.product_title,
-      price: doc.product_price,
-      pspPrice: doc.product_psp_price,
-      description: doc.product_desc,
-      features: doc.product_features,
-      keywords: doc.product_keywords,
-      label: doc.product_label,
-      status: doc.status,
-      productUrl: doc.product_url,
-      images: [doc.product_img1, doc.product_img2, doc.product_img3].filter(Boolean),
-      video: doc.product_video,
-      categories: doc.cat_id.map((catId) => ({
-        id: catId,
-        name: categoryMap[catId] || "Unknown Category",
-      })),
-      pCatId: doc.p_cat_id,
-      manufacturerId: doc.manufacturer_id,
-      createdAt: doc.created_at,
-    })); // Ensure it returns only the documents array
+    return response.documents.map((doc) => {
+      let categoryIds: string[] = [];
+
+      // Ensure `cat_id` is treated as an array
+      if (Array.isArray(doc.cat_id)) {
+        categoryIds = doc.cat_id;
+      } else if (typeof doc.cat_id === "string") {
+        categoryIds = [doc.cat_id];
+      }
+
+      console.log("Category IDs for Product:", doc.product_title, categoryIds); // Debugging
+
+      return {
+        id: doc.$id,
+        name: doc.product_title,
+        price: doc.product_price,
+        pspPrice: doc.product_psp_price,
+        description: doc.product_desc,
+        features: doc.product_features,
+        keywords: doc.product_keywords,
+        label: doc.product_label,
+        status: doc.status,
+        productUrl: doc.product_url,
+        images: [doc.product_img1, doc.product_img2, doc.product_img3].filter(Boolean),
+        video: doc.product_video,
+        categories: categoryIds.map((catId: string) => ({
+          id: catId,
+          name: categoryMap[catId] || "Unknown Category",
+        })),
+        pCatId: doc.p_cat_id,
+        manufacturerId: doc.manufacturer_id,
+        createdAt: doc.created_at,
+      };
+    }); // Ensure it returns only the documents array
   } catch (error) {
     console.error("Error fetching products:", error);
     return []; // Prevent crash if request fails
