@@ -44,10 +44,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 const login = async (email: string, password: string): Promise<void> => {
   try {
     // Step 1: Logout any existing session to prevent conflicts
-    await account.deleteSession("current");
+    await account.deleteSession("current").catch(() => {}); // Ignore errors if no session exists
     
     // Step 1: Log in user with Appwrite authentication
     await account.createEmailPasswordSession(email, password);
+
+    // Step 3: Ensure session exists before calling `account.get()`
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Small delay for Appwrite to process session
     const user = await account.get(); // Get logged-in user details
 
     // Step 2: Check if user exists in the "admins" collection
@@ -142,8 +145,16 @@ const login = async (email: string, password: string): Promise<void> => {
   useEffect(() => {
     const getUser = async () => {
       try {
+        // Check if there is an active session
+        const session = await account.getSession("current").catch(() => null);
+        if (!session) {
+          console.warn("No active session found.");
+          setUser(null);
+          return;
+        }
+  
         const user = await account.get();
-
+  
         // Fetch role from Admin collection
         const adminQuery = await databases.listDocuments(
           import.meta.env.VITE_APPWRITE_DATABASE_ID,
@@ -153,13 +164,13 @@ const login = async (email: string, password: string): Promise<void> => {
   
         // Determine role
         const role = adminQuery.documents.length > 0 ? "admin" : "customer";
-  
         setUser({ ...user, role });
       } catch (error) {
         console.error("Session Error:", error);
         setUser(null);
       }
     };
+  
     getUser();
   }, []);
 

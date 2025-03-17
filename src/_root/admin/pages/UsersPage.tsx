@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from "@/components/ui/table";
 
 export const UsersPage = () => {
-    const [users, setUsers] = useState<{ id: string; name: string; email: string }[]>([]);
+    const [users, setUsers] = useState<{ id: string; name: string; email: string; role: string; profileImage: string }[]>([]);
 
   useEffect(() => {
     loadUsers();
@@ -32,6 +32,8 @@ export const UsersPage = () => {
             <TableHead>ID</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+            <TableHead>Profile Photo</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -41,6 +43,20 @@ export const UsersPage = () => {
               <TableCell>{user.id}</TableCell>
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
+              <TableCell className={user.role === "admin" ? "text-red-500" : "text-blue-500"}>
+                {user.role}
+              </TableCell>
+              <TableCell>
+                {user.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt={user.name}
+                    className="w-10 h-10 rounded-full border border-gray-300"
+                  />
+                ) : (
+                  "No Image"
+                )}
+              </TableCell>
               <TableCell>
                 <Button onClick={() => handleDelete(user.id)} variant="destructive">Delete</Button>
               </TableCell>

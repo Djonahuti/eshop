@@ -1,4 +1,4 @@
-import { Client, Account, Databases, Storage, ID } from "appwrite";
+import { Client, Account, Databases, Storage, ID, Query } from "appwrite";
 
 // Initialize Appwrite Client
 const client = new Client();
@@ -12,6 +12,7 @@ const storage = new Storage(client);
 
 const DB_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const STORAGE_BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID;
+const ADMIN_COLLECTION_ID = import.meta.env.VITE_APPWRITE_ADMIN_COLLECTION_ID;
 const PRODUCTS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID;
 const CUSTOMERS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_CUSTOMERS_COLLECTION_ID;
 const ORDERS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_ORDERS_COLLECTION_ID;
@@ -31,6 +32,16 @@ export const authService = {
   
   async getUser() {
     return await account.get();
+  }
+};
+
+// Function to log out the user
+export const logout = async () => {
+  try {
+    await account.deleteSession("current");
+    window.location.href = "/login"; // Redirect after logout
+  } catch (error) {
+    console.error("Logout Error:", error);
   }
 };
 
@@ -389,11 +400,67 @@ export const updateOrderStatus = async (orderId: string, status: string) => {
 // Fetch Users
 export const getUsers = async () => {
   try {
-    const response = await database.listDocuments(DB_ID, CUSTOMERS_COLLECTION_ID);
-    return response.documents || []; // Ensure it returns only the documents array
+    // Fetch customers
+    const customers = await database.listDocuments(DB_ID, CUSTOMERS_COLLECTION_ID);
+
+    // Fetch admins
+    const admins = await database.listDocuments(DB_ID, ADMIN_COLLECTION_ID);
+
+    // Format users data
+    return [
+      ...customers.documents.map((customer) => ({
+        id: customer.$id,
+        name: customer.customer_name,
+        email: customer.customer_email,
+        role: "customer",
+        profileImage: customer.customer_image,
+      })),
+      ...admins.documents.map((admin) => ({
+        id: admin.$id,
+        name: admin.admin_name,
+        email: admin.admin_email,
+        role: "admin",
+        profileImage: admin.admin_image,
+      })),
+    ]; // Ensure it returns only the documents array
   } catch (error) {
     console.error("Error fetching users:", error);
     return []; // Prevent crash if request fails
+  }
+};
+
+// Function to get the logged-in user's profile picture
+export const getProfileImage = async () => {
+  try {
+    const user = await account.get();
+    const email = user.email;
+
+    // Check if user is a customer
+    const customerQuery = await database.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_CUSTOMERS_COLLECTION_ID,
+      [Query.equal("customer_email", email)]
+    );
+
+    if (customerQuery.documents.length > 0) {
+      return customerQuery.documents[0].customer_image;
+    }
+
+    // Check if user is an admin
+    const adminQuery = await database.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_ADMIN_COLLECTION_ID,
+      [Query.equal("admin_email", email)]
+    );
+
+    if (adminQuery.documents.length > 0) {
+      return adminQuery.documents[0].admin_image;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error fetching profile image:", error);
+    return null;
   }
 };
 
