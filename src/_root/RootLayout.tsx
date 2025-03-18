@@ -7,16 +7,18 @@ import Bottombar from "@/components/shared/Bottombar";
 
 const RootLayout = () => {
   return (
-    <div className="w-full md:flex">
-      <Topbar />
-      <Navbar />
+    <>
+    <Topbar />
+    <div className="min-h-screen bg-gray-100">
+      <div className="hidden md:block"><Navbar /></div>
 
-      <section className="flex flex-1 h-full">
+      <section>
         <Outlet />
       </section>
 
       <Bottombar />
     </div>
+    </>
   );
 };
 

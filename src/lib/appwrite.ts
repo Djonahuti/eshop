@@ -173,8 +173,62 @@ export const addProduct = async ({
   }
 };
 
+/* ==========================
+   🚀 GET PRODUCTS FUNCTIONS
+   ========================== */
+// Get Product with Images & Video
+export async function getProducts() {
+  try {
+    const products = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID!,
+      import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID!
+    );
+
+    const categories = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID!,
+      import.meta.env.VITE_APPWRITE_CATEGORIES_COLLECTION_ID!
+    );
+    
+    const productCategories = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID!,
+      import.meta.env.VITE_APPWRITE_PRODUCT_CATEGORIES_COLLECTION_ID!
+    );
+    
+    const manufacturers = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID!,
+      import.meta.env.VITE_APPWRITE_MANUFACTURERS_COLLECTION_ID!
+    );
+
+    console.log('Fetched Categories:', categories.documents);
+    console.log('Fetched Product Categories:', productCategories.documents);
+    console.log('Fetched Manufacturers:', manufacturers.documents);
+
+    const categoryMap = Object.fromEntries(categories.documents.map(cat => [cat.$id, cat.cat_title || cat.name]));
+    const productCategoryMap = Object.fromEntries(productCategories.documents.map(pCat => [pCat.$id, pCat.p_cat_title || pCat.name]));
+    const manufacturerMap = Object.fromEntries(manufacturers.documents.map(man => [man.$id, man.manufacturer_title || man.name]));
+    console.log("Fetched Products:", products.documents);
+
+    return products.documents.map(product => ({
+      ...product,
+      categoryName: categoryMap[product.cat_id[0]] || 'Unknown',
+      productCategoryName: productCategoryMap[product.p_cat_id[0]] || 'Unknown',
+      manufacturerName: manufacturerMap[product.manufacturer_id[0]] || 'Unknown',
+      price: product.price || 'N/A',
+      product_psp_price: product.product_psp_price || 0,
+      product_features: product.product_features || [],
+      product_desc: product.product_desc || '',
+      product_video: product.product_video || '',
+      product_label: product.product_label || '',
+    }));
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
+}
+
 export default {
   addProduct,
+  getProducts,
   getCategories,
   getProductCategories,
   getManufacturers,
