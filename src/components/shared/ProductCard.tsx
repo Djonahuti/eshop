@@ -2,12 +2,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getProducts } from "@/lib/appwrite";
 import { ShoppingCart, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 export const ProductCard = () => {
-  const navigate = useNavigate();
 const [products, setProducts] = useState<any[]>([]);
 const [loading, setLoading] = useState(true);
 
@@ -30,15 +28,13 @@ if (loading) return <p>Loading products...</p>;
         </span>
       </div>
       <CardContent className="mt-4 text-center">
-        <h3 className="text-lg font-semibold ushop-primary">
-          <Button variant="ghost" onClick={() => navigate(`/product/${product.$id}`)}>
-          {product.product_title}
-          </Button>
-          </h3>
-        <div className="relative">
-        <p className="text-gray-600 absolute left-0">{product.product_label}</p>
-        <p className="text-lg font-bold absolute right-0">₦{product.product_price}</p>
-        </div>
+            <Link to={`/product/${product.$id}`} className="text-lg font-semibold ushop-primary hover:underline">
+              {product.product_title}
+            </Link>
+            <div className="relative flex justify-between items-center mt-2">
+              <p className="text-gray-600">{product.product_label}</p>
+              <p className="text-lg font-bold">₦{product.product_price}</p>
+            </div>
         <div className="flex justify-center gap-4 mt-3">
           <button className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">
             <Heart className="h-5 w-5 text-gray-600" />
