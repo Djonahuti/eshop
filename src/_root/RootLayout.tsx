@@ -9,7 +9,7 @@ const RootLayout = () => {
   return (
     <>
     <Topbar />
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <div className="hidden md:block"><Navbar /></div>
 
       <section>

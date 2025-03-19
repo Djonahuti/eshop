@@ -1,28 +1,36 @@
+
+import { Home, Package2, PackagePlus, PackageSearch, Settings, UsersRound } from "lucide-react";
+
 export const sidebarLinks = [
   {
-    imgURL: "/assets/icons/home.svg",
-    route: "/",
+    imgURL: Home,
+    route: "/admin-dashboard",
     label: "Home",
   },
   {
-    imgURL: "/assets/icons/wallpaper.svg",
-    route: "/explore",
-    label: "Explore",
+    imgURL: UsersRound,
+    route: "/users",
+    label: "Users",
   },
   {
-    imgURL: "/assets/icons/people.svg",
-    route: "/all-users",
-    label: "People",
+    imgURL: PackagePlus,
+    route: "/add-product",
+    label: "Add Product",
   },
   {
-    imgURL: "/assets/icons/bookmark.svg",
-    route: "/saved",
-    label: "Saved",
+    imgURL: PackageSearch,
+    route: "/view-products",
+    label: "Products",
   },
   {
-    imgURL: "/assets/icons/gallery-add.svg",
-    route: "/create-post",
-    label: "Create Post",
+    imgURL: Package2,
+    route: "/orders",
+    label: "Orders",
+  },
+  {
+    imgURL: Settings,
+    route: "/admin-dashboard",
+    label: "Settings",
   },
 ];
 
