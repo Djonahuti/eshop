@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ProductForm } from "./forms/ProductForm";
-import { getProducts, deleteProduct } from "@/lib/appwriteService";
+import { deleteProduct } from "@/lib/appwriteService";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getProducts } from "@/lib/appwrite";
 
 export const ProductsPage = () => {
-  const [products, setProducts] = useState<{ id: string; name: string; price: number; description: string; features: string; label: string; images: string[]; video: string; categories: { id: string; name: string }[]; }[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
-    const loadProducts = async () => {
-      const data = await getProducts();
-      if (data.length === 0) {
-        console.warn("No products found.");
-      }
-      setProducts(data || []);
-    };
-    loadProducts();
+    getProducts().then((data) => {
+      setProducts(data);
+      setLoading(false);
+    });
   }, []);
 
   const handleDelete = async (id: string) => {
     await deleteProduct(id);
   };
+
+  if (loading) return <p>Loading products...</p>;
 
   return (
     <div>
@@ -39,6 +39,8 @@ export const ProductsPage = () => {
             <TableHead>Features</TableHead>
             <TableHead>Label</TableHead>
             <TableHead>Category</TableHead>
+            <TableHead>Product Category</TableHead>
+            <TableHead>Brand</TableHead>
             <TableHead>Images</TableHead>
             <TableHead>Video</TableHead>
             <TableHead>Actions</TableHead>
@@ -46,25 +48,21 @@ export const ProductsPage = () => {
         </TableHeader>
         <TableBody>
           {products.map((product, index) => (
-            <TableRow key={product.id || index}>
-              <TableCell>{product.id}</TableCell>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>{product.price}</TableCell>
-              <TableCell>{product.description}</TableCell>
-              <TableCell>{product.features}</TableCell>
-              <TableCell>{product.label}</TableCell>
+            <TableRow key={product.$id || index}>
+              <TableCell>{product.$id}</TableCell>
+              <TableCell>{product.product_title}</TableCell>
+              <TableCell>{product.product_price}</TableCell>
+              <TableCell>{product.product_desc}</TableCell>
+              <TableCell>{product.product_features}</TableCell>
+              <TableCell>{product.product_label}</TableCell>
+              <TableCell>{product.cat_id?.[0]?.cat_title}</TableCell>
+              <TableCell>{product.p_cat_id?.[0]?.p_cat_title}</TableCell>
+              <TableCell>{product.manufacturer_id?.[0]?.manufacturer_title}</TableCell>
               <TableCell>
-                {product.categories.length > 0 
-                  ? product.categories.map((cat) => cat.name).join(", ") 
-                  : "No Category"}
+              <img key={index} src={product.product_img1} alt="Product" width="50" />
               </TableCell>
               <TableCell>
-                        {product.images.map((img, index) => (
-                          <img key={index} src={img} alt="Product" width="50" />
-                        ))}
-              </TableCell>
-              <TableCell>
-                        {product.video ? <a href={product.video} target="_blank">View Video</a> : "No Video"}
+                        {product.product_video ? <a href={product.product_video} target="_blank">View Video</a> : "No Video"}
               </TableCell>
               <TableCell>
                 <Button onClick={() => handleDelete(product.id)} variant="destructive">Delete</Button>
