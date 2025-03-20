@@ -44,8 +44,8 @@ const SignupForm = ({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Sign Up</CardTitle>
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl">Sign Up</CardTitle>
           <CardDescription>
             Enter your Details to create an account
           </CardDescription>
@@ -53,6 +53,7 @@ const SignupForm = ({
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
+             <div className="grid gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
@@ -140,6 +141,7 @@ const SignupForm = ({
               <Button variant="outline" className="w-full">
                 Sign Up with Google
               </Button>
+             </div>
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
@@ -150,6 +152,10 @@ const SignupForm = ({
           </form>
         </CardContent>
       </Card>
+      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
+        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
+        and <a href="#">Privacy Policy</a>.
+      </div>
     </div>
   );
 };
