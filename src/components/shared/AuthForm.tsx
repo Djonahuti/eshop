@@ -1,6 +1,11 @@
 import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+//import { cn } from '@/lib/utils';
 
 const AuthForm = ({ type }: { type: 'login' | 'signup' }) => {
   const [email, setEmail] = useState('');
@@ -38,76 +43,119 @@ const AuthForm = ({ type }: { type: 'login' | 'signup' }) => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
-        <h2 className="text-xl font-bold mb-4">{type === 'signup' ? 'Sign Up' : 'Login'}</h2>
-        {type === 'signup' && (
-        <>
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={customerName}
-          onChange={(e) => setCustomerName(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input type="file" onChange={handleImageUpload} accept="image/*" required />
-        <input
-          type="text"
-          placeholder="Phone NO"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Home Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="City"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-      </>
-        )}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
-          {type === 'signup' ? 'Sign Up' : 'Login'}
-        </button>
-      </form>
-    </div>
+      <div className="flex flex-col gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">{type === 'signup' ? 'Sign Up' : 'Login'}</CardTitle>
+            <CardDescription>
+              {type === 'signup' ? 'Enter your Details to create an account' : 'Enter your email below to login to your account'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-6">
+              {type === 'signup' && (
+              <>
+                <div className="grid gap-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="John Doe"
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="image">Upload Profile Picture</Label>
+                  <Input
+                    type="file"
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="phone">Phone NO</Label>
+                  <Input
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="08012345678"
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="address">Home Address</Label>
+                  <Input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="NO 1, Otigba street ikeja"
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="city">City</Label>
+                  <Input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="Lagos"
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="country">Country</Label>
+                  <Input
+                    type="text"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    placeholder="Nigeria"
+                    required
+                  />
+                </div>
+              </>
+              )}
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="m@example.com"
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label htmlFor="password">Password</Label>
+                  </div>
+                  <Input id="password" type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)} 
+                    required 
+                  />
+                </div>
+                {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+                <Button type="submit" className="w-full">
+                {type === 'signup' ? 'Sign Up' : 'Login'}
+                </Button>
+                <Button variant="outline" className="w-full">
+                  {type === 'signup' ? 'Sign Up with Google' : 'Login with Google'}
+                </Button>
+              </div>
+              <div className="mt-4 text-center text-sm">
+                {type === 'signup' ? 'Already have an account?' : 'Don&apos;t have an account?'}{" "}
+                <a href={type === 'signup' ? '/login' : '/signup'} className="underline underline-offset-4">
+                  {type === 'signup' ? 'Login' : 'Sign Up'}
+                </a>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
   );
 };
 

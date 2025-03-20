@@ -36,8 +36,6 @@ function App() {
 
           {/* Admin routes */}
           <Route element={<AdminLayout />}>
-            <Route path="/login" element={<SigninForm />} />
-            <Route path="/signup" element={<SignupForm />} />
             <Route path="/admin-dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
             <Route path="/add-product" element={<ProductForm />} />
             <Route path="/dashboard" element={<DashboardContent />} />

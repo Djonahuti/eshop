@@ -67,7 +67,6 @@ const SignupForm = ({
                 <Label htmlFor="image">Upload Profile Picture</Label>
                 <Input
                   type="file"
-                  value={customerName}
                   onChange={handleImageUpload}
                   accept="image/*"
                   required
