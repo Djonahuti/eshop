@@ -28,29 +28,40 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { getProfileImage, logout } from "@/lib/appwrite"
+import { logout, getUserDetails } from "@/lib/appwrite"
 import { useEffect, useState } from "react"
 
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+export function NavUser() {
   const { isMobile } = useSidebar();
-    const [profileImage, setProfileImage] = useState<string | null>(null);
-  
-    useEffect(() => {
-      const fetchProfileImage = async () => {
-        const imageUrl = await getProfileImage();
-        setProfileImage(imageUrl);
-      };
-      fetchProfileImage();
-    }, []);
+  const [user, setUser] = useState<{ name: string; email: string; avatar: string } | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const userDataArray = await getUserDetails();
+        console.log("User Data:", userDataArray); // Debugging log
+
+        if (Array.isArray(userDataArray) && userDataArray.length > 0) {
+          const userData = userDataArray[0]; // Extract first object from array
+          setUser({
+            name: userData.admin_name,
+            email: userData.admin_email,
+            avatar: userData.admin_image,
+          });
+
+          setProfileImage(userData.admin_image); // Use avatar from Appwrite
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  if (!user) return null; // Prevent rendering if user is not loaded
 
   return (
     <SidebarMenu>
