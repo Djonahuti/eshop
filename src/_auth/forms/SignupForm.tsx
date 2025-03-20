@@ -1,8 +1,16 @@
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/AuthContext';
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SignupForm = () => {
+const SignupForm = ({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [customerName, setCustomerName] = useState('');
@@ -34,71 +42,115 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
-        <h2 className="text-xl font-bold mb-4">Sign Up</h2>
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={customerName}
-          onChange={(e) => setCustomerName(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input type="file" onChange={handleImageUpload} accept="image/*" required />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Phone NO"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Home Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="City"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 mb-4 border rounded"
-          required
-        />
-        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-        <button type="submit" className="bg-green-500 text-white p-2 rounded w-full">
-          Sign Up
-        </button>
-      </form>
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Sign Up</CardTitle>
+          <CardDescription>
+            Enter your Details to create an account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                  type="text"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  placeholder="John Doe"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="image">Upload Profile Picture</Label>
+                <Input
+                  type="file"
+                  value={customerName}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="m@example.com"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="phone">Phone NO</Label>
+                <Input
+                  type="text"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="08012345678"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="address">Home Address</Label>
+                <Input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="NO 1, Otigba street ikeja"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="city">City</Label>
+                <Input
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="Lagos"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="country">Country</Label>
+                <Input
+                  type="text"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  placeholder="Nigeria"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="password">Password</Label>
+                </div>
+                <Input id="password" type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)} 
+                  required 
+                />
+              </div>
+              {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+              <Button type="submit" className="w-full">
+                Sign Up
+              </Button>
+              <Button variant="outline" className="w-full">
+                Sign Up with Google
+              </Button>
+            </div>
+            <div className="mt-4 text-center text-sm">
+              Already have an account?{" "}
+              <a href="/login" className="underline underline-offset-4">
+                Login
+              </a>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
