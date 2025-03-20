@@ -134,6 +134,7 @@ export const DataFetch = () => {
   ];
 
   return (
+    <div id="products-section">
     <Tabs defaultValue="orders">
       <TabsList>
         <TabsTrigger value="orders">Orders</TabsTrigger>
@@ -150,5 +151,6 @@ export const DataFetch = () => {
         <DataTable columns={userColumns} data={users} />
       </TabsContent>
     </Tabs>
+    </div>
   );
 };

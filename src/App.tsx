@@ -11,9 +11,9 @@ import ProductDetails from "./_root/pages/ProductDetails";
 import AuthLayout from "./_auth/AuthLayout";
 import { ProductForm } from "./_root/admin/pages/forms/ProductForm";
 import { UsersPage } from "./_root/admin/pages/UsersPage";
-import { OrdersPage } from "./_root/admin/pages/OrdersPage";
 import AdminLayout from "./_root/admin/AdminLayout";
 import DashboardContent from "./_root/admin/pages/DashboardContent";
+import { DataFetch } from "./_root/admin/pages/DataFetch";
 
 function App() {
   return (
@@ -42,7 +42,7 @@ function App() {
             <Route path="/add-product" element={<ProductForm />} />
             <Route path="/dashboard" element={<DashboardContent />} />
             <Route path="/users" element={<UsersPage />} />
-            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/orders" element={<DataFetch />} />
           </Route>
         </Routes>
       </ThemeProvider>
