@@ -403,11 +403,59 @@ export const deleteUser = async (userId: string) => {
   }
 };
 
+// Function to get the logged-in user's profile picture
+export const getUserDetails = async () => {
+  try {
+    const user = await account.get();
+    const email = user.email;
+
+    // Check if user is a customer
+    const customerQuery = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_CUSTOMERS_COLLECTION_ID,
+      [Query.equal("customer_email", email)]
+    );
+
+    if (customerQuery.documents.length > 0) {
+      return customerQuery.documents.map(customer => ({
+        ...customer,
+        customer_name: customer.customer_name,
+        customer_email: customer.customer_email,
+        customer_contact: customer.customer_contact,
+      }));
+    }
+
+    // Check if user is an admin
+    const adminQuery = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_ADMIN_COLLECTION_ID,
+      [Query.equal("admin_email", email)]
+    );
+
+    if (adminQuery.documents.length > 0) {
+      return adminQuery.documents.map(admin => ({
+        ...admin,
+        admin_name: admin.admin_name,
+        admin_email: admin.admin_email,
+        admin_contact: admin.admin_contact,
+        admin_job: admin.admin_job,
+        admin_about: admin.admin_about,
+      }));
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error fetching Details:", error);
+    return null;
+  }
+};
+
 export default {
   addProduct,
   getProducts,
   getCategories,
   getProductCategories,
+  getUserDetails,
   getManufacturers,
   client
 };

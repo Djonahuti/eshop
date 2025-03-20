@@ -31,6 +31,7 @@ import {
 import { getProfileImage, logout } from "@/lib/appwrite"
 import { useEffect, useState } from "react"
 
+
 export function NavUser({
   user,
 }: {
