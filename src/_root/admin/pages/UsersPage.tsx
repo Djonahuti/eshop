@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getUsers, deleteUser } from "@/lib/appwriteService";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "@/components/shared/DataTable";
+import { DataTable } from "@/components/shared/data-table";
 
 interface User {
   id: string;
