@@ -1,6 +1,6 @@
 import { ChartAreaInteractive } from "@/components/shared/chart-area-interactive"
 import { SectionCards } from "@/components/shared/SectionCards"
-import { AdminPage } from "./AdminPage"
+import { DataFetch } from "./DataFetch"
 
 const DashboardContent = () => {
   return (
@@ -11,7 +11,7 @@ const DashboardContent = () => {
           <div className="px-4 lg:px-6">
             <ChartAreaInteractive />
           </div>
-          <AdminPage />
+          <DataFetch />
         </div>
       </div>
     </div>

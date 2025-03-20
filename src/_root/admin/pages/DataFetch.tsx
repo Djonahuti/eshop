@@ -33,7 +33,7 @@ interface User {
   profileImage: string;
 }
 
-export const AdminPage = () => {
+export const DataFetch = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [users, setUsers] = useState<User[]>([]);
