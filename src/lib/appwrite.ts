@@ -1,7 +1,12 @@
 // src/appwrite.ts
-import { Client, Account, Databases, Storage, ID } from 'appwrite';
+import { Client, Account, Databases, Storage, ID, Query } from 'appwrite';
 
 const client = new Client();
+
+const DB_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
+const ADMIN_COLLECTION_ID = import.meta.env.VITE_APPWRITE_ADMIN_COLLECTION_ID;
+const CUSTOMERS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_CUSTOMERS_COLLECTION_ID;
+const ORDERS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_ORDERS_COLLECTION_ID;
 
 client
   .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT) // API endpoint
@@ -26,6 +31,16 @@ export const authService = {
   
   async getUser() {
     return await account.get();
+  }
+};
+
+// Function to log out the user
+export const logout = async () => {
+  try {
+    await account.deleteSession("current");
+    window.location.href = "/login"; // Redirect after logout
+  } catch (error) {
+    console.error("Logout Error:", error);
   }
 };
 
@@ -224,7 +239,169 @@ export async function getProducts() {
     console.error('Error fetching products:', error);
     return [];
   }
-}
+};
+
+// Delete Product
+export const deleteProduct = async (productId: string) => {
+  try {
+    return await databases.deleteDocument(DB_ID, "products", productId);
+  } catch (error) {
+    console.error("Error deleting product:", error);
+  }
+};
+
+/* ==========================
+   🛒 CART FUNCTIONS
+   ========================== */
+export const addToCart = async (cartItem: { ip_add: string; p_id: string; qty: number; size: string; price: number }) => {
+  try {
+    return await databases.createDocument(DB_ID, "cart", ID.unique(), cartItem);
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+  }
+};
+
+/* ==========================
+   ❤️ WISHLIST FUNCTIONS
+   ========================== */
+export const addToWishlist = async (wishlistItem: { customer_id: string; product_id: string }) => {
+  try {
+    return await databases.createDocument(DB_ID, "wishlist", ID.unique(), wishlistItem);
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+  }
+};
+
+/* ==========================
+   🎟️ COUPON FUNCTIONS
+   ========================== */
+export const applyCoupon = async (couponCode: string) => {
+  try {
+    const coupons = await databases.listDocuments(DB_ID, "coupons");
+    return coupons.documents.find((c) => c.coupon_code === couponCode) || null;
+  } catch (error) {
+    console.error("Error applying coupon:", error);
+  }
+};
+
+/* ==========================
+   💳 PAYMENT FUNCTIONS
+   ========================== */
+export const processPayment = async (paymentData: {
+  amount: number;
+  invoice_no: string;
+  ref_no: string;
+  code: string;
+  payment_mode: string;
+}) => {
+  try {
+    return await databases.createDocument(DB_ID, "payments", ID.unique(), paymentData);
+  } catch (error) {
+    console.error("Error processing payment:", error);
+  }
+};
+
+/* ==========================
+   📦 ORDERS FUNCTIONS
+   ========================== */
+// Fetch Orders
+export const getOrders = async () => {
+  try {
+    const response = await databases.listDocuments(DB_ID, ORDERS_COLLECTION_ID);
+    return response.documents || []; // Ensure it returns only the documents array
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return []; // Prevent crash if request fails
+  }
+};
+
+// Update Order Status
+export const updateOrderStatus = async (orderId: string, status: string) => {
+  try {
+    return await databases.updateDocument(DB_ID, "orders", orderId, { status });
+  } catch (error) {
+    console.error("Error updating order status:", error);
+  }
+};
+
+/* ==========================
+   👥 USERS FUNCTIONS
+   ========================== */
+// Fetch Users
+export const getUsers = async () => {
+  try {
+    // Fetch customers
+    const customers = await databases.listDocuments(DB_ID, CUSTOMERS_COLLECTION_ID);
+
+    // Fetch admins
+    const admins = await databases.listDocuments(DB_ID, ADMIN_COLLECTION_ID);
+
+    // Format users data
+    return [
+      ...customers.documents.map((customer) => ({
+        id: customer.$id,
+        name: customer.customer_name,
+        email: customer.customer_email,
+        role: "customer",
+        profileImage: customer.customer_image,
+      })),
+      ...admins.documents.map((admin) => ({
+        id: admin.$id,
+        name: admin.admin_name,
+        email: admin.admin_email,
+        role: "admin",
+        profileImage: admin.admin_image,
+      })),
+    ]; // Ensure it returns only the documents array
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return []; // Prevent crash if request fails
+  }
+};
+
+// Function to get the logged-in user's profile picture
+export const getProfileImage = async () => {
+  try {
+    const user = await account.get();
+    const email = user.email;
+
+    // Check if user is a customer
+    const customerQuery = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_CUSTOMERS_COLLECTION_ID,
+      [Query.equal("customer_email", email)]
+    );
+
+    if (customerQuery.documents.length > 0) {
+      return customerQuery.documents[0].customer_image;
+    }
+
+    // Check if user is an admin
+    const adminQuery = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_ADMIN_COLLECTION_ID,
+      [Query.equal("admin_email", email)]
+    );
+
+    if (adminQuery.documents.length > 0) {
+      return adminQuery.documents[0].admin_image;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error fetching profile image:", error);
+    return null;
+  }
+};
+
+// Delete User
+export const deleteUser = async (userId: string) => {
+  try {
+    return await databases.deleteDocument(DB_ID, "customers", userId);
+  } catch (error) {
+    console.error("Error deleting user:", error);
+  }
+};
 
 export default {
   addProduct,

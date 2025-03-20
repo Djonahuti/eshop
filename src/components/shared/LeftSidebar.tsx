@@ -3,69 +3,170 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
+  SidebarFooter,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { sidebarLinks } from "@/constants"
+import { NavMain } from "./NavMain"
+import { NavDocuments } from "./NavDocuments"
+import { NavSecondary } from "./NavSecondary"
+import { NavUser } from "./NavUser"
+import { CameraIcon, ClipboardListIcon, DatabaseIcon, FileCodeIcon, FileIcon, FileTextIcon, HelpCircleIcon, LayoutDashboardIcon, Package2, PackagePlus, PackageSearch, SearchIcon, SettingsIcon, User2, UsersRound } from "lucide-react"
 import ThemeToggle from "../ThemeToggle"
-import { LogOut } from "lucide-react"
-import { logout } from "@/lib/appwriteService"
 
-// Menu items.
+const navData = {
+  user: {
+    name: "Admin",
+    email: "m@example.com",
+    avatar: User2,
+  },
 
+  sidebarLinks: [
+    {
+      imgURL: LayoutDashboardIcon,
+      route: "/dashboard",
+      label: "Dashboard",
+    },
+    {
+      imgURL: UsersRound,
+      route: "/users",
+      label: "Users",
+    },
+    {
+      imgURL: PackagePlus,
+      route: "/add-product",
+      label: "Add Product",
+    },
+    {
+      imgURL: PackageSearch,
+      route: "/dashboard",
+      label: "Products",
+    },
+    {
+      imgURL: Package2,
+      route: "/orders",
+      label: "Orders",
+    },
+  ],
 
-export function AppSidebar() {
+  navClouds: [
+    {
+      imgURL: CameraIcon,
+      route: "#",
+      isActive: true,
+      label: "Capture",
+      items: [
+        {
+          label: "Active Proposals",
+          route: "#",
+        },
+        {
+          label: "Archived",
+          route: "#",
+        },
+      ],
+    },
+    {
+      imgURL: FileTextIcon,
+      route: "#",
+      label: "Proposal",
+      items: [
+        {
+          label: "Active Proposals",
+          route: "#",
+        },
+        {
+          label: "Archived",
+          route: "#",
+        },
+      ],
+    },
+    {
+      imgURL: FileCodeIcon,
+      route: "#",
+      label: "Prompts",
+      items: [
+        {
+          label: "Active Proposals",
+          route: "#",
+        },
+        {
+          label: "Archived",
+          route: "#",
+        },
+      ],
+    },
+  ],
+
+  navSecondary: [
+    {
+      imgURL: SettingsIcon,
+      route: "#",
+      label: "Settings",
+    },
+    {
+      imgURL: HelpCircleIcon,
+      route: "#",
+      label: "Get Help",
+    },
+    {
+      imgURL: SearchIcon,
+      route: "#",
+      label: "Search",
+    },
+  ],
+
+  navDocuments: [
+    {
+      imgURL: DatabaseIcon,
+      route: "#",
+      label: "Data Library",
+    },
+    {
+      imgURL: ClipboardListIcon,
+      route: "#",
+      label: "Reports",
+    },
+    {
+      imgURL: FileIcon,
+      route: "#",
+      label: "Word Assistant",
+    },
+  ],
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar>
+    <Sidebar collapsible="offcanvas" {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="data-[slot=sidebar-menu-button]:!p-1.5">
+              <a href="#">
+                <img
+                  src="/src/assets/ushop.svg"
+                  alt="logo"
+                  width={85}
+                  height={20}
+                  />
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>
-            <img
-              src="/src/assets/ushop.svg"
-              alt="logo"
-              width={85}
-              height={20}
-            />
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-            {sidebarLinks.map((link) => (
-                <SidebarMenuItem key={link.label}>
-                  <SidebarMenuButton asChild>
-                    <a href={link.route}>
-                      <link.imgURL />
-                      <span>{link.label}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-              
-                {/* Logout Button as a Sidebar Item */}
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <button onClick={logout} className="flex space-x-0 w-full text-left cursor-pointer">
-                      <LogOut/>
-                      <span>Logout</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
-                {/* Theme Toggle as a Sidebar Item */}
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <div className="space-x-0 items-center flex cursor-pointer">
-                      <ThemeToggle />
-                    </div>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <NavMain items={navData.sidebarLinks} />
+        <NavDocuments items={navData.navDocuments} />
+        <NavSecondary items={navData.navSecondary} className="mt-auto" />
       </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={navData.user} />
+        <ThemeToggle />
+      </SidebarFooter>
     </Sidebar>
   )
 }

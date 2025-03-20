@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ProductForm } from "./forms/ProductForm";
 import { deleteProduct } from "@/lib/appwriteService";
 import { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "./products/data-table";
 import { getProducts } from "@/lib/appwrite";
+import { DataTable } from "@/components/shared/data-table";
 
 interface Product {
   $id: string;
@@ -37,7 +37,7 @@ export const ProductsPage = () => {
     setProducts((prev) => prev.filter((product) => product.$id !== id));
   };
 
-  const columns: ColumnDef<Product>[] = [
+  const productColumns: ColumnDef<Product>[] = [
     { accessorKey: "product_title", header: "Title" },
     { accessorKey: "product_price", header: "Price" },
     { accessorKey: "product_desc", header: "Description" },
@@ -87,7 +87,7 @@ export const ProductsPage = () => {
       <h2 className="text-2xl font-bold mb-4">Manage Products</h2>
       <Button onClick={() => setShowForm(!showForm)}>{showForm ? "Close Form" : "Add Product"}</Button>
       {showForm && <ProductForm />}
-      <DataTable columns={columns} data={products} />
+              <DataTable columns={productColumns} data={products} />
     </div>
   );
 };

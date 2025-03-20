@@ -1,15 +1,17 @@
-import { UsersPage } from "./UsersPage";
+
+import DashboardContent from "./DashboardContent";
+
 
 
 export default function AdminDashboard() {
 
   return (
-    <div className="flex h-screen">
+    <>
 
       {/* Main Content */}
-      <main className="flex-1 p-6">
-        <UsersPage />
+      <main>
+      <DashboardContent />
       </main>
-    </div>
+    </>
   );
 };

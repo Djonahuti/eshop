@@ -10,10 +10,10 @@ import RootLayout from "./_root/RootLayout";
 import ProductDetails from "./_root/pages/ProductDetails";
 import AuthLayout from "./_auth/AuthLayout";
 import { ProductForm } from "./_root/admin/pages/forms/ProductForm";
-import { ProductsPage } from "./_root/admin/pages/ProductsPage";
 import { UsersPage } from "./_root/admin/pages/UsersPage";
 import { OrdersPage } from "./_root/admin/pages/OrdersPage";
 import AdminLayout from "./_root/admin/AdminLayout";
+import DashboardContent from "./_root/admin/pages/DashboardContent";
 
 function App() {
   return (
@@ -34,13 +34,13 @@ function App() {
             <Route path="/signup" element={<SignupForm />} />
           </Route>
 
-          {/* private routes */}
+          {/* Admin routes */}
           <Route element={<AdminLayout />}>
             <Route path="/login" element={<SigninForm />} />
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/admin-dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
             <Route path="/add-product" element={<ProductForm />} />
-            <Route path="/view-products" element={<ProductsPage />} />
+            <Route path="/dashboard" element={<DashboardContent />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/orders" element={<OrdersPage />} />
           </Route>

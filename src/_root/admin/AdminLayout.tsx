@@ -1,5 +1,6 @@
+import { DashboardHeader } from "@/components/shared/DashboardHeader";
 import { AppSidebar } from "@/components/shared/LeftSidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 
 
@@ -7,11 +8,13 @@ export default function AdminLayout () {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        <DashboardHeader />
       <main>
-        <SidebarTrigger />
         <Outlet />
       </main>
+      </SidebarInset>
     </SidebarProvider>
   )
 }
