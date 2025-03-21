@@ -1,5 +1,5 @@
 import { DashboardHeader } from "@/components/shared/DashboardHeader";
-import { AppSidebar } from "@/components/shared/LeftSidebar";
+import { AppSidebar } from "@/components/shared/Sidebar/LeftSidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 

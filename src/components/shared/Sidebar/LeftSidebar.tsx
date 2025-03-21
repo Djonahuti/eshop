@@ -14,7 +14,7 @@ import { NavDocuments } from "./NavDocuments"
 import { NavSecondary } from "./NavSecondary"
 import { NavUser } from "./NavUser"
 import { CameraIcon, ClipboardListIcon, DatabaseIcon, FileCodeIcon, FileIcon, FileTextIcon, HelpCircleIcon, LayoutDashboardIcon, Package2, PackagePlus, PackageSearch, SearchIcon, SettingsIcon, User2, UsersRound } from "lucide-react"
-import ThemeToggle from "../ThemeToggle"
+import ThemeToggle from "../../ThemeToggle"
 
 const navData = {
   user: {
