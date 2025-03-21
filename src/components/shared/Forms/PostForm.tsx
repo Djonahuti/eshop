@@ -1,244 +1,185 @@
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import FileUploader from "../FileUploader";
-import { addProduct, getCategories, getProductCategories, getManufacturers, storage } from "@/lib/appwrite";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Product name is required." }),
-  price: z.string().min(1, { message: "Price is required." }),
-  pspPrice: z.string().min(1, { message: "Slashed price is required." }),
-  description: z.string().min(5, { message: "Description is too short." }),
-  features: z.string().min(5, { message: "Features are required." }),
-  keywords: z.string().min(1, { message: "Keywords are required." }),
-  label: z.string().min(1, { message: "Label is required." }),
-  productUrl: z.string().min(1, { message: "Product URL is required." }),
-  categoryId: z.string().min(1, { message: "Category is required." }),
-  pCatId: z.string().min(1, { message: "Product category is required." }),
-  manufacturerId: z.string().min(1, { message: "Manufacturer is required." }),
-  product_img1: z.string().url({ message: "Image 1 is required." }),
-  product_img2: z.string().url({ message: "Image 2 is required." }),
-  product_img3: z.string().url({ message: "Image 3 is required." }),
-  product_video: z.string().optional(),
-});
+import { addProduct, getCategories, getManufacturers, getProductCategories } from "@/lib/appwrite"; // Ensure this is correctly imported
+import FileUploader from "../FileUploader";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PackagePlus } from "lucide-react";
 
 export function PostForm() {
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      price: "",
-      pspPrice: "",
-      description: "",
-      features: "",
-      keywords: "",
-      label: "",
-      productUrl: "",
-      categoryId: "",
-      pCatId: "",
-      manufacturerId: "",
-      product_img1: "",
-      product_img2: "",
-      product_img3: "",
-      product_video: "",
-    },
-  });
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [pspPrice, setPspPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [features, setFeatures] = useState("");
+  const [keywords, setKeywords] = useState("");
+  const [label, setLabel] = useState("");
+  const [productUrl, setProductUrl] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [pCatId, setPCatId] = useState("");
+  const [manufacturerId, setManufacturerId] = useState("");
+  const [images, setImages] = useState<File[]>([]);
+  const [video, setVideo] = useState<File | null>(null); // State for video file
+  const [categories, setCategories] = useState<{ $id: string; cat_title: string }[]>([]);
+  const [productCategories, setProductCategories] = useState<{ $id: string; p_cat_title: string }[]>([]);
+  const [manufacturers, setManufacturers] = useState<{ $id: string; manufacturer_title: string }[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  
+    useEffect(() => {
+      // Fetch categories, product categories, and manufacturers on load
+      Promise.all([getCategories(), getProductCategories(), getManufacturers()])
+        .then(([categories, productCategories, manufacturers]) => {
+          setCategories(categories);
+          setProductCategories(productCategories);
+          setManufacturers(manufacturers);
+        })
+        .catch((err) => console.error("Error fetching data:", err));
+    }, []);
 
-  const [categories, setCategories] = useState([]);
-  const [productCategories, setProductCategories] = useState([]);
-  const [manufacturers, setManufacturers] = useState([]);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
 
-  useEffect(() => {
-    Promise.all([getCategories(), getProductCategories(), getManufacturers()])
-      .then(([categories, productCategories, manufacturers]) => {
-        setCategories(categories || []);
-        setProductCategories(productCategories || []);
-        setManufacturers(manufacturers || []);
-      })
-      .catch((err) => console.error("Error fetching data:", err));
-  }, []);
-
-  async function onSubmit(values) {
-    try {
-      // Ensure images are stored as URLs
-      const uploadedImages = [values.product_img1, values.product_img2, values.product_img3]
-        .filter(img => typeof img === "string"); // ✅ Ensure only strings are used
-  
-      const uploadedVideo = typeof values.product_video === "string" ? values.product_video : "";
-  
-      const formattedValues = {
-        ...values,
-        images: uploadedImages, // ✅ Ensure images are an array of URLs
-        video: uploadedVideo, // ✅ Ensure video is a URL
-      };
-  
-      delete formattedValues.product_img1;
-      delete formattedValues.product_img2;
-      delete formattedValues.product_img3;
-      delete formattedValues.product_video;
-  
-      console.log("Submitting product:", formattedValues); // ✅ Debugging before API call
-  
-      await addProduct(formattedValues);
-      form.reset();
-    } catch (err) {
-      console.error("Error adding product:", err);
+    if (!name || !price || !pspPrice || !description || !features || !keywords || !label || !productUrl || !categoryId || !pCatId || !manufacturerId || images.length < 1) {
+      setError("All fields are required, including at least one image.");
+      return;
     }
-  }
+
+    try {
+      await addProduct({
+        name,
+        price: parseFloat(price),
+        pspPrice: parseFloat(pspPrice),
+        description,
+        features,
+        keywords,
+        label,
+        status: "active",
+        productUrl,
+        images: images.map((img) => img.file), // Pass file objects
+        video: video ? video.file : undefined, // Pass video file
+        categoryId,
+        pCatId,
+        manufacturerId,
+      });
+
+      // Reset form
+      setName("");
+      setPrice("");
+      setPspPrice("");
+      setDescription("");
+      setFeatures("");
+      setKeywords("");
+      setLabel("");
+      setProductUrl("");
+      setCategoryId("");
+      setPCatId("");
+      setManufacturerId("");
+      setImages([]);
+      setVideo(null);
+    } catch (err) {
+      setError("Failed to add product. Please try again.");
+      console.error(err);
+    }
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField control={form.control} name="name" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Product Name</FormLabel>
-            <FormControl><Input {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+    <div className="p-6">
+        <Card>
+            <CardHeader className="flex items-center gap-2 self-center font-medium">
+                <CardTitle className="flex items-center justify-center"><PackagePlus/>Add Product</CardTitle>
+            </CardHeader>
+            <CardContent>
+    <form onSubmit={handleSubmit} className="space-y-4 p-6 shadow rounded-lg">
+      {error && <p className="text-red-500">{error}</p>}
+        <div className="space-y-2">
+          <Label>Product Name</Label>
+          <Input value={name} onChange={(e) => setName(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Price</Label>
+          <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Slashed Price</Label>
+          <Input type="number" value={pspPrice} onChange={(e) => setPspPrice(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Description</Label>
+          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Features</Label>
+          <Textarea value={features} onChange={(e) => setFeatures(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Keywords</Label>
+          <Input value={keywords} onChange={(e) => setKeywords(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Label</Label>
+          <Input value={label} onChange={(e) => setLabel(e.target.value)} required />
+        </div>
+        <div className="space-y-2">
+          <Label>Product URL</Label>
+          <Input value={productUrl} onChange={(e) => setProductUrl(e.target.value)} required />
+        </div>
+        <div className="grid md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
 
-        <FormField control={form.control} name="price" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Price</FormLabel>
-            <FormControl><Input type="number" {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+        {/* Category Dropdown */}
+        <Select value={categoryId} onValueChange={setCategoryId}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select Category" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((category) => (
+              <SelectItem key={category.$id} value={category.$id}>
+                {category.cat_title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        <FormField control={form.control} name="pspPrice" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Old Price</FormLabel>
-            <FormControl><Input type="number" {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+        {/* Product Category Dropdown */}
+        <Select value={pCatId} onValueChange={setPCatId}>
+          <SelectTrigger>       
+            <SelectValue placeholder="Select Product Category" />
+          </SelectTrigger>
+          <SelectContent>
+            {productCategories.map((pCat) => (
+              <SelectItem key={pCat.$id} value={pCat.$id}>
+                {pCat.p_cat_title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-        <FormField control={form.control} name="description" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Description</FormLabel>
-            <FormControl><Input {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+        {/* Manufacturer Dropdown */}
+        <Select value={manufacturerId} onValueChange={setManufacturerId}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select Manufacturer" />
+          </SelectTrigger>
+          <SelectContent>
+            {manufacturers.map((man) => (
+              <SelectItem key={man.$id} value={man.$id}>
+                {man.manufacturer_title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        </div>
 
-        <FormField control={form.control} name="features" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Features</FormLabel>
-            <FormControl><Textarea {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+      <FileUploader accept="image/*" multiple onUpload={setImages} />
+      <FileUploader accept="video/*" onUpload={(files) => setVideo(files[0] || null)} />
 
-        <FormField control={form.control} name="keywords" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Keywords</FormLabel>
-            <FormControl><Input {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-
-        <FormField control={form.control} name="label" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Label</FormLabel>
-            <FormControl><Input {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-
-        <FormField control={form.control} name="productUrl" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Product Url</FormLabel>
-            <FormControl><Input {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-
-        {/* Category Select */}
-        <FormField control={form.control} name="categoryId" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Category</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <SelectTrigger><SelectValue placeholder="Select Category" /></SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.$id} value={category.$id}>{category.cat_title}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )} />
-
-        {/* Product Category Select */}
-        <FormField control={form.control} name="pCatId" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Product Category</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <SelectTrigger><SelectValue placeholder="Select Product Category" /></SelectTrigger>
-              <SelectContent>
-                {productCategories.map((pCat) => (
-                  <SelectItem key={pCat.$id} value={pCat.$id}>{pCat.p_cat_title}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )} />
-
-        {/* Manufacturer Select */}
-        <FormField control={form.control} name="manufacturerId" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Manufacturer</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <SelectTrigger><SelectValue placeholder="Select Manufacturer" /></SelectTrigger>
-              <SelectContent>
-                {manufacturers.map((man) => (
-                  <SelectItem key={man.$id} value={man.$id}>{man.manufacturer_title}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )} />
-
-        {/* Image Uploads */}
-        {["product_img1", "product_img2", "product_img3"].map((img, index) => (
-          <FormField key={img} control={form.control} name={img} render={({ field }) => (
-            <FormItem>
-              <FormLabel>Product Image {index + 1}</FormLabel>
-              <FormControl>
-                <FileUploader fieldChange={field.onChange} mediaUrl={field.value} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )} />
-        ))}
-
-        <FormField control={form.control} name="product_video" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Product Video (Optional)</FormLabel>
-            <FormControl>
-              <FileUploader fieldChange={field.onChange} mediaUrl={field.value} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-
-        <Button type="submit">Add Product</Button>
-      </form>
-    </Form>
+      <Button type="submit">Add Product</Button>
+    </form>
+            </CardContent>
+        </Card>
+    </div>
   );
-}
+};
+
