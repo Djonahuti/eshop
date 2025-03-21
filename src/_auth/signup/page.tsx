@@ -1,4 +1,4 @@
-import AuthForm from "@/components/shared/AuthForm"
+import AuthForm from "@/components/shared/Forms/AuthForm"
 
 
 const SignUp = () => {
