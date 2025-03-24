@@ -81,17 +81,17 @@ export const DataFetch = () => {
     {
       accessorKey: "cat_id",
       header: "Categories",
-      cell: ({ row }) => row.original.cat_id?.[0]?.cat_title || "Unknown",
+      cell: ({ row }) => row.original.cat_id?.cat_title || "Unknown",
     },
     {
       accessorKey: "p_cat_id",
       header: "Product Categories",
-      cell: ({ row }) => row.original.p_cat_id?.[0]?.p_cat_title || "Unknown",
+      cell: ({ row }) => row.original.p_cat_id?.p_cat_title || "Unknown",
     },
     {
       accessorKey: "manufacturer_id",
       header: "Manufacturers",
-      cell: ({ row }) => row.original.manufacturer_id?.[0]?.manufacturer_title || "Unknown",
+      cell: ({ row }) => row.original.manufacturer_id?.manufacturer_title || "Unknown",
     },
     {
       accessorKey: "product_img1",

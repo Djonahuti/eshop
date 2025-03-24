@@ -3,11 +3,11 @@ import { logout, getProfileImage } from "@/lib/appwriteService";
 import { Heart, LogOut, ShoppingCart } from "lucide-react";
 import ThemeToggle from "../ThemeToggle";
 import { Button } from "../ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 const Topbar = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const Topbar = () => {
     fetchProfileImage();
   }, []);
   return (
-    <div className=" text-white flex">
+    <>
     <nav className="fixed top-0 left-0 bg-[#0F1111] w-full h-10 flex justify-between md:hidden items-center text-white text-sm">
         <Link to="/" className="w-24 h-10 mt-2">
           <img
@@ -53,7 +53,7 @@ const Topbar = () => {
         </div>
 
     </nav>
-    </div>
+    </>
   );
 };
 

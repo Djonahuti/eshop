@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { addCategory } from "@/lib/appwriteService";
+import { addCategory } from "@/lib/appwrite";
 
 export const CategoryForm = () => {
-  const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
   const [top, setTop] = useState(false);
   const [image, setImage] = useState<File | null>(null);
 
@@ -16,7 +16,7 @@ export const CategoryForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addCategory({ title, top, image });
+    await addCategory({ name, top, image });
     toast("Category added successfully!");
   };
 
@@ -24,7 +24,7 @@ export const CategoryForm = () => {
     <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-white shadow rounded-lg">
       <div>
         <Label>Category Name</Label>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <Input value={name} onChange={(e) => setName(e.target.value)} required />
       </div>
       <div>
         <Label>Top Category?</Label>

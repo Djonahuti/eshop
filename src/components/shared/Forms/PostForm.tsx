@@ -39,33 +39,89 @@ export function PostForm() {
         .catch((err) => console.error("Error fetching data:", err));
     }, []);
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setError(null);
+
+  //   if (!name || !price || !pspPrice || !description || !features || !keywords || !label || !productUrl || !categoryId || !pCatId || !manufacturerId || images.length < 1) {
+  //     setError("All fields are required, including at least one image.");
+  //     return;
+  //   }
+
+  //   try {
+  //     await addProduct({
+  //       name,
+  //       price: parseFloat(price),
+  //       pspPrice: parseFloat(pspPrice),
+  //       description,
+  //       features,
+  //       keywords,
+  //       label,
+  //       status: "active",
+  //       productUrl,
+  //       images: images.map((img) => img.file), // Pass file objects
+  //       video: video ? video.file : undefined, // Pass video file
+  //       cat_id: categoryId, // Updated to match new schema
+  //       p_cat_id: pCatId,
+  //       manufacturer_id: manufacturerId,
+  //     });
+
+  //     // Reset form
+  //     setName("");
+  //     setPrice("");
+  //     setPspPrice("");
+  //     setDescription("");
+  //     setFeatures("");
+  //     setKeywords("");
+  //     setLabel("");
+  //     setProductUrl("");
+  //     setCategoryId("");
+  //     setPCatId("");
+  //     setManufacturerId("");
+  //     setImages([]);
+  //     setVideo(null);
+  //   } catch (err) {
+  //     setError("Failed to add product. Please try again.");
+  //     console.error(err);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
+  
     if (!name || !price || !pspPrice || !description || !features || !keywords || !label || !productUrl || !categoryId || !pCatId || !manufacturerId || images.length < 1) {
       setError("All fields are required, including at least one image.");
       return;
     }
-
+  
+    const productData = {
+      name,
+      price: parseFloat(price),
+      pspPrice: parseFloat(pspPrice),
+      description,
+  
+      // ✅ Convert features from a string to an array
+      features: features.split(",").map((feature) => feature.trim()),
+  
+      keywords,
+      label,
+      status: "active",
+      productUrl,
+      images: images.map((img) => img.file),
+      video: video ? video.file : undefined,
+  
+      // ✅ Ensure these are plain IDs or it's defined
+      cat_id: categoryId || null,
+      p_cat_id: pCatId || null,
+      manufacturer_id: manufacturerId || null,
+    };
+  
+    console.log("Submitting Product Data:", productData); // Debugging Log
+  
     try {
-      await addProduct({
-        name,
-        price: parseFloat(price),
-        pspPrice: parseFloat(pspPrice),
-        description,
-        features,
-        keywords,
-        label,
-        status: "active",
-        productUrl,
-        images: images.map((img) => img.file), // Pass file objects
-        video: video ? video.file : undefined, // Pass video file
-        categoryId,
-        pCatId,
-        manufacturerId,
-      });
-
+      await addProduct(productData);
+      console.log("Product Submitted Successfully!");
+  
       // Reset form
       setName("");
       setPrice("");

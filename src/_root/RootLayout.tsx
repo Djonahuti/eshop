@@ -8,8 +8,9 @@ import Bottombar from "@/components/shared/Bottombar";
 const RootLayout = () => {
   return (
     <>
-    <Topbar />
+    
     <div className="min-h-screen">
+      <div className="md:hidden"><Topbar /></div>
       <div className="hidden md:block"><Navbar /></div>
 
       <section>

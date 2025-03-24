@@ -19,8 +19,8 @@ interface Product {
   product_img1?: string;
   product_img2?: string;
   product_img3?: string;
-  cat_id?: { $id: string; cat_title: string }[];
-  p_cat_id?: { $id: string; p_cat_title: string }[];
+  cat_id?: { cat_title: string }[];
+  p_cat_id?: { $id: string; $id: string; p_cat_title: string }[];
   manufacturer_id?: { $id: string; manufacturer_title: string }[];
 };
 
@@ -39,12 +39,10 @@ const ProductDetails = () => {
       setProduct(foundProduct);
 
       // Find related products based on cat_id, p_cat_id, manufacturer_id
-      const related = data.filter(
-        (p) =>
-          (foundProduct.cat_id && p.cat_id?.some((c) => foundProduct.cat_id?.some((fc) => fc.$id === c.$id))) ||
-          (foundProduct.p_cat_id && p.p_cat_id?.some((pc) => foundProduct.p_cat_id?.some((fpc) => fpc.$id === pc.$id))) ||
-          (foundProduct.manufacturer_id &&
-            p.manufacturer_id?.some((m) => foundProduct.manufacturer_id?.some((fm) => fm.$id === m.$id)))
+      const related = data.filter((p) =>
+        (foundProduct.cat_id && p.cat_id?.$id === foundProduct.cat_id.$id) ||
+        (foundProduct.p_cat_id && p.p_cat_id?.$id === foundProduct.p_cat_id.$id) ||
+        (foundProduct.manufacturer_id && p.manufacturer_id?.$id === foundProduct.manufacturer_id.$id)
       );
 
       setRelatedProducts(related);
@@ -82,7 +80,7 @@ const ProductDetails = () => {
             <s className="text-red-600">{product.product_psp_price && `₦${product.product_psp_price}`}</s> ₦{product.product_price}
           </h2>
 
-          <p className="text-lg text-gray-500">Category: <span className="ushop-primary font-bold">{product.cat_id?.[0]?.cat_title}</span></p>
+          <p className="text-lg text-gray-500">Product Category: <span className="ushop-primary font-bold">{product.p_cat_id?.p_cat_title}</span></p>
           {product.product_label && <Badge className="bg-green-700 text-white">{product.product_label}</Badge>}
 
           <p className="text-gray-600 mt-2">{product.product_desc}</p>

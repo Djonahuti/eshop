@@ -15,6 +15,7 @@ import AdminLayout from "./_root/admin/AdminLayout";
 import DashboardContent from "./_root/admin/pages/DashboardContent";
 import { DataFetch } from "./_root/admin/pages/DataFetch";
 import { PostForm } from "./components/shared/Forms/PostForm";
+import { AddForm } from "./components/shared/Forms/AddForm";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin-dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
             <Route path="/add-product" element={<PostForm />} />
+            <Route path="/add-form" element={<AddForm />} />
             <Route path="/dashboard" element={<DashboardContent />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/orders" element={<DataFetch />} />

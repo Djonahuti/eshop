@@ -24,7 +24,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onUpload, accept, multiple 
   return (
     <div className="flex flex-center flex-col mine-dark rounded-xl cursor-pointer text-center">
       <input type="file" accept={accept} multiple={multiple} onChange={handleFileChange} className="cursor-pointer" />
-      <div className="flex flex-1 justify-center w-full p-5 lg:p-10 preview-container">
+      <div className="preview-container">
         {previewURLs.map((src, index) => (
           <img key={index} src={src} alt="Preview" className="preview-image" />
         ))}

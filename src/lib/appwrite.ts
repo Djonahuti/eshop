@@ -46,6 +46,30 @@ export const logout = async () => {
 
 
 
+// Category Type Definitions
+interface CategoryData {
+  name: string;
+  top: boolean;
+  image: File;
+};
+
+
+// Product Category Type Definitions
+interface ProductCategoryData {
+  name: string;
+  top: boolean;
+  image: File;
+};
+
+
+// Manufacturer Type Definitions
+interface ManufacturerData {
+  name: string;
+  top: boolean;
+  image: File;
+};
+
+
 // Type Definitions
 interface ProductData {
   name: string;
@@ -64,6 +88,44 @@ interface ProductData {
   manufacturerId: string;
 }
 
+/* ==========================
+   🚀 CATEGORIES FUNCTIONS
+   ========================== */
+// Add Category with Image
+export const addCategory = async ({
+  name,
+  top,
+  image,
+}: CategoryData) => {
+  try {
+
+    // Upload image to Appwrite Storage (if provided)
+    let imageUrl = null;
+    if (image instanceof File) {
+      const uploadedImage = await storage.createFile(
+        import.meta.env.VITE_APPWRITE_BUCKET_ID,
+        ID.unique(),
+        image
+      );
+      imageUrl = storage.getFileView(import.meta.env.VITE_APPWRITE_BUCKET_ID, uploadedImage.$id);
+    }
+
+    // Create Category in Appwrite database
+    await databases.createDocument(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_CATEGORIES_COLLECTION_ID,
+      ID.unique(),
+      {
+        cat_title: name,
+        cat_top: top,
+        cat_image: imageUrl, // ✅ Save video URL
+      }
+    );
+  } catch (error) {
+    console.error("Error adding category:", error);
+  }
+};
+
 // Fetch Categories
 export const getCategories = async () => {
   try {
@@ -78,6 +140,44 @@ export const getCategories = async () => {
   }
 };
 
+/* ==========================
+   🚀 PRODUCT CATEGORIES FUNCTIONS
+   ========================== */
+// Add Product Category with Image
+export const addProductCategory = async ({
+  name,
+  top,
+  image,
+}: ProductCategoryData) => {
+  try {
+
+    // Upload image to Appwrite Storage (if provided)
+    let imageUrl = null;
+    if (image instanceof File) {
+      const uploadedImage = await storage.createFile(
+        import.meta.env.VITE_APPWRITE_BUCKET_ID,
+        ID.unique(),
+        image
+      );
+      imageUrl = storage.getFileView(import.meta.env.VITE_APPWRITE_BUCKET_ID, uploadedImage.$id);
+    }
+
+    // Create Product Category in Appwrite database
+    await databases.createDocument(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_PRODUCT_CATEGORIES_COLLECTION_ID,
+      ID.unique(),
+      {
+        p_cat_title: name,
+        p_cat_top: top,
+        p_cat_image: imageUrl, // ✅ Save video URL
+      }
+    );
+  } catch (error) {
+    console.error("Error adding product category:", error);
+  }
+};
+
 // Fetch Product Categories
 export const getProductCategories = async () => {
   try {
@@ -89,6 +189,44 @@ export const getProductCategories = async () => {
   } catch (error) {
     console.error("Error fetching product categories:", error);
     return [];
+  }
+};
+
+/* ==========================
+   🚀 MANUFACTURER FUNCTIONS
+   ========================== */
+// Add Product Category with Image
+export const addManufacturer = async ({
+  name,
+  top,
+  image,
+}: ManufacturerData) => {
+  try {
+
+    // Upload image to Appwrite Storage (if provided)
+    let imageUrl = null;
+    if (image instanceof File) {
+      const uploadedImage = await storage.createFile(
+        import.meta.env.VITE_APPWRITE_BUCKET_ID,
+        ID.unique(),
+        image
+      );
+      imageUrl = storage.getFileView(import.meta.env.VITE_APPWRITE_BUCKET_ID, uploadedImage.$id);
+    }
+
+    // Create Manufacturer in Appwrite database
+    await databases.createDocument(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_MANUFACTURERS_COLLECTION_ID,
+      ID.unique(),
+      {
+        manufacturer_title: name,
+        manufacturer_top: top,
+        manufacturer_image: imageUrl, // ✅ Save video URL
+      }
+    );
+  } catch (error) {
+    console.error("Error adding manufacturer:", error);
   }
 };
 
@@ -127,13 +265,24 @@ export const addProduct = async ({
   manufacturerId,
 }: ProductData) => {
   try {
+    console.log("Final data being sent to Appwrite:", {//+
+      name,//+
+      price,//+
+      pspPrice,//+
+      description,//+
+      features,//+
+      keywords,//+
+      label,//+
+      status,//+
+      productUrl,//+
+      images,//+
+      video,//+
+      categoryId,//+
+      pCatId,//+
+      manufacturerId//+
+    }); // ✅ Debugging log
     // Ensure `features` is stored as an array
     const featuresArray = Array.isArray(features) ? features : features.split(",").map((f) => f.trim());
-
-    // Ensure relationships are stored as arrays
-    const categoryArray = Array.isArray(categoryId) ? categoryId : [categoryId];
-    const pCatArray = Array.isArray(pCatId) ? pCatId : [pCatId];
-    const manufacturerArray = Array.isArray(manufacturerId) ? manufacturerId : [manufacturerId];
 
     // Upload images to Appwrite Storage
     const uploadedImages = await Promise.all(
@@ -177,12 +326,15 @@ export const addProduct = async ({
         product_img3: uploadedImages[2] || null,
         product_video: videoUrl, // ✅ Save video URL
         product_url: productUrl,
-        cat_id: categoryArray, // ✅ Now correctly formatted as an array
-        p_cat_id: pCatArray, // ✅ Now correctly formatted as an array
-        manufacturer_id: manufacturerArray, // ✅ Now correctly formatted as an array
+        cat_id: categoryId ? categoryId : null, 
+        p_cat_id: pCatId ? pCatId : null,
+        manufacturer_id: manufacturerId ? manufacturerId : null,
         created_at: new Date().toISOString(),
       }
     );
+
+    console.log("Product successfully added:", Response); // ✅ Debugging log
+    return Response;
   } catch (error) {
     console.error("Error adding product:", error);
   }
@@ -217,17 +369,13 @@ export async function getProducts() {
     console.log('Fetched Categories:', categories.documents);
     console.log('Fetched Product Categories:', productCategories.documents);
     console.log('Fetched Manufacturers:', manufacturers.documents);
-
-    const categoryMap = Object.fromEntries(categories.documents.map(cat => [cat.$id, cat.cat_title || cat.name]));
-    const productCategoryMap = Object.fromEntries(productCategories.documents.map(pCat => [pCat.$id, pCat.p_cat_title || pCat.name]));
-    const manufacturerMap = Object.fromEntries(manufacturers.documents.map(man => [man.$id, man.manufacturer_title || man.name]));
     console.log("Fetched Products:", products.documents);
 
     return products.documents.map(product => ({
       ...product,
-      categoryName: categoryMap[product.cat_id[0]] || 'Unknown',
-      productCategoryName: productCategoryMap[product.p_cat_id[0]] || 'Unknown',
-      manufacturerName: manufacturerMap[product.manufacturer_id[0]] || 'Unknown',
+      cat_id: product.cat_id ? { $id: product.cat_id.$id, cat_title: product.cat_id.cat_title } : null,
+      p_cat_id: product.p_cat_id ? { $id: product.p_cat_id.$id, p_cat_title: product.p_cat_id.p_cat_title } : null,
+      manufacturer_id: product.manufacturer_id ? { $id: product.manufacturer_id.$id, manufacturer_title: product.manufacturer_id.manufacturer_title } : null,
       price: product.price || 'N/A',
       product_psp_price: product.product_psp_price || 0,
       product_features: product.product_features || [],

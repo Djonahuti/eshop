@@ -23,8 +23,8 @@ if (loading) return <p>Loading products...</p>;
     <Card key={index} className="w-full max-w-xs shadow-lg rounded-xl p-4">
       <div className="relative">
       <ImageSlider images={[product.product_img1, product.product_img2, product.product_img3].filter(Boolean)} />
-        <span className="absolute top-2 right-2 bg-black text-white text-xs px-2 py-1 rounded">
-        {Array.isArray(product.manufacturer_id) && product.manufacturer_id.length > 0 ? product.manufacturer_id[0].manufacturer_title : 'N/A'}
+        <div></div><span className="absolute top-2 right-2 bg-black text-white text-xs px-2 py-1 rounded">
+        {product.manufacturer_id ? product.manufacturer_id.manufacturer_title : 'N/A'}
         </span>
       </div>
       <CardContent className="mt-4 text-center">
@@ -62,7 +62,7 @@ const ImageSlider = ({ images }: { images: string[] }) => {
   }, [images]);
 
   return (
-    <div className="relative w-full h-60 overflow-hidden rounded-md">
+    <div className="w-full h-60 overflow-hidden rounded-md">
       <img
         src={images[currentIndex]}
         alt="Product"
