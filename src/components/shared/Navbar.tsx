@@ -27,7 +27,7 @@ const Navbar = () => {
         height={40}
       />
     </Link>
-
+      {/* Search Bar */}
       <div className="relative flex-grow max-w-xl">
         <input
           type="text"

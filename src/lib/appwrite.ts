@@ -691,6 +691,34 @@ export async function displayManufacturers() {
   }
 };
 
+// Search Function
+// export const searchProducts = async (query: string) => {
+//   try {
+//     console.log("Querying database with:", query);
+
+//       const searchQueries = [
+//             Query.equal("product_title", query), // Exact match test
+//             Query.equal("product_keywords", query),
+//             Query.equal("cat_id", query),
+//             Query.equal("manufacturer_id", query),
+//             Query.equal("p_cat_id", query),
+//           ];
+  
+//       const response = await databases.listDocuments(
+//         import.meta.env.VITE_APPWRITE_DATABASE_ID!,
+//         import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID!,
+//         searchQueries // Pass as an array
+//       );
+
+//     console.log("API Response:", response.documents);
+  
+//       return response.documents;
+//     } catch (error) {
+//       console.error("Search error:", error);
+//       return [];
+//     }
+// };
+
 
 
 export default {
