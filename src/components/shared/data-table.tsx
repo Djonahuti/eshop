@@ -119,6 +119,7 @@ export function DataTable<T>({ columns, data: initialData }: DataTableProps<T>) 
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
+                <TableHead><Checkbox /></TableHead>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}

@@ -62,7 +62,7 @@ export const AddForm = () => {
                   <TabsTrigger value="productCategory">Add Product Category</TabsTrigger>
                 </TabsList>
       
-                <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-white shadow rounded-lg">
+                <form onSubmit={handleSubmit} className="space-y-4 p-6 shadow rounded-lg">
                   <div className="space-y-2">
                     <Label>Name</Label>
                     <Input

@@ -9,14 +9,13 @@ import { ThemeProvider } from "./components/theme-provider";
 import RootLayout from "./_root/RootLayout";
 import ProductDetails from "./_root/pages/ProductDetails";
 import AuthLayout from "./_auth/AuthLayout";
-//import { ProductForm } from "./_root/admin/pages/forms/ProductForm";
-import { UsersPage } from "./_root/admin/pages/UsersPage";
 import AdminLayout from "./_root/admin/AdminLayout";
 import DashboardContent from "./_root/admin/pages/DashboardContent";
 import { DataFetch } from "./_root/admin/pages/DataFetch";
 import { PostForm } from "./components/shared/Forms/PostForm";
 import { AddForm } from "./components/shared/Forms/AddForm";
 import { AddImages } from "./components/shared/Forms/AddImages";
+import { Database } from "./_root/admin/pages/Database";
 
 function App() {
   return (
@@ -44,8 +43,9 @@ function App() {
             <Route path="/add-form" element={<AddForm />} />
             <Route path="/dashboard" element={<DashboardContent />} />
             <Route path="/add-image" element={<AddImages />} />
-            <Route path="/users" element={<UsersPage />} />
-            <Route path="/orders" element={<DataFetch />} />
+            <Route path="/users" element={<Database />} />
+            <Route path="/view-products" element={<Database />} />
+            <Route path="/view-orders" element={<DataFetch />} />
           </Route>
         </Routes>
       </ThemeProvider>

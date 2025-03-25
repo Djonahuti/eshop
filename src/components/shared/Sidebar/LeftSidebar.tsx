@@ -31,7 +31,7 @@ const navData = {
     },
     {
       imgURL: UsersRound,
-      route: "#products-section",
+      route: "/users",
       label: "Users",
     },
     {
@@ -41,12 +41,12 @@ const navData = {
     },
     {
       imgURL: PackageSearch,
-      route: "#products-section",
+      route: "/view-products",
       label: "Products",
     },
     {
       imgURL: Package2,
-      route: "#products-section",
+      route: "/view-orders",
       label: "Orders",
     },
   ],
@@ -121,7 +121,7 @@ const navData = {
   navDocuments: [
     {
       imgURL: DatabaseIcon,
-      route: "#",
+      route: "/users",
       label: "Data Library",
     },
     {
