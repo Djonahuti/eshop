@@ -653,6 +653,43 @@ export const addImages = async ({
   }
 };
 
+// Fetch and Display Product Categories
+export async function displayProductCategories() {
+  try {
+    const pCat = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_PRODUCT_CATEGORIES_COLLECTION_ID
+    );
+
+    return pCat.documents.map(pCat => ({
+      ...pCat,
+      p_cat_title: pCat.p_cat_title || '',
+      p_cat_image: pCat.p_cat_image || '',
+    }));
+  } catch (error) {
+    console.error('Error fetching product categories:', error);
+    return [];
+  }
+};
+
+// Fetch and Display Manufacturers
+export async function displayManufacturers() {
+  try {
+    const man = await databases.listDocuments(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_MANUFACTURERS_COLLECTION_ID
+    );
+
+    return man.documents.map(man => ({
+      ...man,
+      manufacturer_title: man.manufacturer_title || '',
+      manufacturer_image: man.manufacturer_image || '',
+    }));
+  } catch (error) {
+    console.error('Error fetching Manufacturers:', error);
+    return [];
+  }
+};
 
 
 
