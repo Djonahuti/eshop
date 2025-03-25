@@ -37,15 +37,15 @@ const Home = () => {
     <section className="p-4">
       <h3 className="text-2xl font-bold mb-4">Today's Deals</h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="nav-bg p-4 rounded-lg shadow-md">
           <img src="/img1.jpg" alt="Deal 1" className="w-full rounded-lg" />
           <p className="mt-2 text-lg font-bold">NGN103,192</p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="nav-bg p-4 rounded-lg shadow-md">
           <img src="/img2.jpg" alt="Deal 2" className="w-full rounded-lg" />
           <p className="mt-2 text-lg font-bold">NGN3,911.10</p>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="nav-bg p-4 rounded-lg shadow-md">
           <img src="/img3.jpg" alt="Deal 3" className="w-full rounded-lg" />
           <p className="mt-2 text-lg font-bold">NGN5,084.19</p>
         </div>

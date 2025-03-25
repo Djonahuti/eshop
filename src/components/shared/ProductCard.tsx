@@ -32,7 +32,7 @@ if (loading) return <p>Loading products...</p>;
               {product.product_title}
             </Link>
             <div className="relative flex justify-between items-center mt-2">
-              <p className="text-gray-600">{product.product_label}</p>
+              <p className="bg-green-700 text-white text-xs px-2 py-1 rounded">{product.product_label}</p>
               <p className="text-lg font-bold">₦{product.product_price}</p>
             </div>
         <div className="flex justify-center gap-4 mt-3">

@@ -18,7 +18,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-white shadow-md px-4 py-3 flex items-center justify-between">
+    <nav className="nav-bg shadow-md px-4 py-3 flex items-center justify-between">
     <Link to="/" className="w-24 h-10 mt-2">
       <img
         src="/src/assets/ushop.svg"

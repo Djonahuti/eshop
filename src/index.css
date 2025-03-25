@@ -38,6 +38,7 @@
   --sidebar-accent-foreground: 240 5.9% 10%;
   --sidebar-border: 220 13% 91%;
   --sidebar-ring: 217.2 91.2% 59.8%;
+  --navbar-bg: #fcfcfc; /* Light mode Nav bar background */
 }
 
 .dark {
@@ -73,6 +74,7 @@
   --sidebar-accent-foreground: 240 4.8% 95.9%;
   --sidebar-border: 240 3.7% 15.9%;
   --sidebar-ring: 217.2 91.2% 59.8%;
+  --navbar-bg: #18181b; /* Dark mode Nav bar background */
 }
 
 @theme inline {
@@ -124,4 +126,8 @@
 }
  .ushop-primary{
   color:#F4623A
+ }
+
+ .nav-bg{
+   background-color:  var(--navbar-bg);
  }
