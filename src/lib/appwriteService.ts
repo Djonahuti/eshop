@@ -472,3 +472,65 @@ export const deleteUser = async (userId: string) => {
     console.error("Error deleting user:", error);
   }
 };
+
+export async function addProducts(productData) {
+  console.log("Received productData in addProduct:", productData); // Debugging log // ✅ Debugging log
+      // Ensure `features` is stored as an array
+      const featuresArray = Array.isArray(productData.features) ? productData.features : productData.features.split(",").map((f) => f.trim());
+  
+      // Upload images to Appwrite Storage
+      const uploadedImages = await Promise.all(
+        productData.images.map(async (image: File) => {
+          const uploaded = await storage.createFile(
+            import.meta.env.VITE_APPWRITE_BUCKET_ID,
+            ID.unique(),
+            image
+          );
+          return storage.getFileView(import.meta.env.VITE_APPWRITE_BUCKET_ID, uploaded.$id);
+        })
+      );
+      
+          // Upload video to Appwrite Storage (if provided)
+          let videoUrl = null;
+          if (productData.video instanceof File) {
+            const uploadedVideo = await storage.createFile(
+              import.meta.env.VITE_APPWRITE_BUCKET_ID,
+              ID.unique(),
+              productData.video
+            );
+            videoUrl = storage.getFileView(import.meta.env.VITE_APPWRITE_BUCKET_ID, uploadedVideo.$id);
+          }
+
+  try {
+    const response = await database.createDocument(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID,
+      ID.unique(),
+      {
+        product_title: productData.name,
+        product_price: productData.price,
+        product_psp_price: productData.pspPrice,
+        product_desc: productData.description,
+        product_features: featuresArray,
+        product_keywords: productData.keywords,
+        product_label: productData.label,
+        status: "active",
+        product_url: productData.productUrl,
+        product_img1: uploadedImages[0] || null,
+        product_img2: uploadedImages[1] || null,
+        product_img3: uploadedImages[2] || null,
+        product_video: videoUrl,
+        cat_id: productData.categoryId ?? null, // Ensure these are correctly passed
+        p_cat_id: productData.pCatId ?? null,
+        manufacturer_id: productData.manufacturerId ?? null,
+        created_at: new Date().toISOString(),
+      }
+    );
+
+    console.log("Product successfully added:", response);
+    return response;
+  } catch (error) {
+    console.error("Error adding product:", error);
+    throw error;
+  }
+}

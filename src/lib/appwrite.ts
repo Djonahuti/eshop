@@ -326,9 +326,9 @@ export const addProduct = async ({
         product_img3: uploadedImages[2] || null,
         product_video: videoUrl, // ✅ Save video URL
         product_url: productUrl,
-        cat_id: categoryId ? categoryId : null, 
-        p_cat_id: pCatId ? pCatId : null,
-        manufacturer_id: manufacturerId ? manufacturerId : null,
+        cat_id: categoryId ?? null, 
+        p_cat_id: pCatId ?? null,
+        manufacturer_id: manufacturerId ?? null,
         created_at: new Date().toISOString(),
       }
     );
@@ -597,6 +597,64 @@ export const getUserDetails = async () => {
     return null;
   }
 };
+
+// Images & Video
+export const addImages = async ({
+  images,
+  video,
+}: ProductData) => {
+  try {
+    console.log("Final data being sent to Appwrite:", {//+
+      images,//+
+      video,//+
+    }); // ✅ Debugging log
+
+    // Upload images to Appwrite Storage
+    const uploadedImages = await Promise.all(
+      images.map(async (image: File) => {
+        const uploaded = await storage.createFile(
+          import.meta.env.VITE_APPWRITE_BUCKET_ID,
+          ID.unique(),
+          image
+        );
+        return storage.getFileView(import.meta.env.VITE_APPWRITE_BUCKET_ID, uploaded.$id);
+      })
+    );
+
+    // Upload video to Appwrite Storage (if provided)
+    let videoUrl = null;
+    if (video instanceof File) {
+      const uploadedVideo = await storage.createFile(
+        import.meta.env.VITE_APPWRITE_BUCKET_ID,
+        ID.unique(),
+        video
+      );
+      videoUrl = storage.getFileView(import.meta.env.VITE_APPWRITE_BUCKET_ID, uploadedVideo.$id);
+    }
+
+    // Create product in Appwrite database
+    await databases.createDocument(
+      import.meta.env.VITE_APPWRITE_DATABASE_ID,
+      import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID,
+      ID.unique(),
+      {
+        product_img1: uploadedImages[0] || null,
+        product_img2: uploadedImages[1] || null,
+        product_img3: uploadedImages[2] || null,
+        product_video: videoUrl, // ✅ Save video URL
+        created_at: new Date().toISOString(),
+      }
+    );
+
+    console.log("Product successfully added:", Response); // ✅ Debugging log
+    return Response;
+  } catch (error) {
+    console.error("Error adding product:", error);
+  }
+};
+
+
+
 
 export default {
   addProduct,

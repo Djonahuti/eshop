@@ -16,6 +16,7 @@ import DashboardContent from "./_root/admin/pages/DashboardContent";
 import { DataFetch } from "./_root/admin/pages/DataFetch";
 import { PostForm } from "./components/shared/Forms/PostForm";
 import { AddForm } from "./components/shared/Forms/AddForm";
+import { AddImages } from "./components/shared/Forms/AddImages";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="/add-product" element={<PostForm />} />
             <Route path="/add-form" element={<AddForm />} />
             <Route path="/dashboard" element={<DashboardContent />} />
+            <Route path="/add-image" element={<AddImages />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/orders" element={<DataFetch />} />
           </Route>

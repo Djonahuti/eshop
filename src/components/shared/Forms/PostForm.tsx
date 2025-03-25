@@ -88,8 +88,18 @@ export function PostForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    console.log("Final Form Data Before Submission:", {
+      name,
+      price,
+      pspPrice,
+      categoryId,
+      pCatId,
+      manufacturerId,
+    });
   
     if (!name || !price || !pspPrice || !description || !features || !keywords || !label || !productUrl || !categoryId || !pCatId || !manufacturerId || images.length < 1) {
+      console.error("One or more relationship fields are empty!");
       setError("All fields are required, including at least one image.");
       return;
     }
@@ -110,10 +120,10 @@ export function PostForm() {
       images: images.map((img) => img.file),
       video: video ? video.file : undefined,
   
-      // ✅ Ensure these are plain IDs or it's defined
-      cat_id: categoryId || null,
-      p_cat_id: pCatId || null,
-      manufacturer_id: manufacturerId || null,
+      // ✅ Ensure they are being passed as string or it's defined
+      cat_id: categoryId ?? null,
+      p_cat_id: pCatId ?? null,
+      manufacturer_id: manufacturerId ?? null,
     };
   
     console.log("Submitting Product Data:", productData); // Debugging Log
@@ -186,7 +196,10 @@ export function PostForm() {
         <div className="grid md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
 
         {/* Category Dropdown */}
-        <Select value={categoryId} onValueChange={setCategoryId}>
+        <Select value={categoryId} onValueChange={(value) => {
+          console.log("Selected Category ID:", value);
+          setCategoryId(value);
+        }}>
           <SelectTrigger>
             <SelectValue placeholder="Select Category" />
           </SelectTrigger>
@@ -200,7 +213,10 @@ export function PostForm() {
         </Select>
 
         {/* Product Category Dropdown */}
-        <Select value={pCatId} onValueChange={setPCatId}>
+        <Select value={pCatId} onValueChange={(value) => {
+          console.log("Selected Product Category ID:", value);
+          setPCatId(value);
+        }}>
           <SelectTrigger>       
             <SelectValue placeholder="Select Product Category" />
           </SelectTrigger>
@@ -214,7 +230,10 @@ export function PostForm() {
         </Select>
 
         {/* Manufacturer Dropdown */}
-        <Select value={manufacturerId} onValueChange={setManufacturerId}>
+        <Select value={manufacturerId} onValueChange={(value) => {
+          console.log("Selected Manufacturer ID:", value);
+          setManufacturerId(value);
+        }}>
           <SelectTrigger>
             <SelectValue placeholder="Select Manufacturer" />
           </SelectTrigger>
