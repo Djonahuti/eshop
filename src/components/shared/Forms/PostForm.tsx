@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PackagePlus } from "lucide-react";
+import { Loader2 } from 'lucide-react';
 
 export function PostForm() {
   const [name, setName] = useState("");
@@ -27,6 +28,7 @@ export function PostForm() {
   const [productCategories, setProductCategories] = useState<{ $id: string; p_cat_title: string }[]>([]);
   const [manufacturers, setManufacturers] = useState<{ $id: string; manufacturer_title: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false); // Added state for loading
   
     useEffect(() => {
       // Fetch categories, product categories, and manufacturers on load
@@ -88,6 +90,7 @@ export function PostForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsPending(true); // Set loading state
 
     console.log("Final Form Data Before Submission:", {
       name,
@@ -149,6 +152,8 @@ export function PostForm() {
     } catch (err) {
       setError("Failed to add product. Please try again.");
       console.error(err);
+    } finally {
+      setIsPending(false); // Reset loading state
     }
   };
 
@@ -250,7 +255,8 @@ export function PostForm() {
       <FileUploader accept="image/*" multiple onUpload={setImages} />
       <FileUploader accept="video/*" onUpload={(files) => setVideo(files[0] || null)} />
 
-      <Button type="submit">Add Product</Button>
+      <Button type="submit" disabled={isPending}>
+      {isPending && <Loader2 className="animate-spin mr-2" size={18} />}Add Product</Button>
     </form>
             </CardContent>
         </Card>

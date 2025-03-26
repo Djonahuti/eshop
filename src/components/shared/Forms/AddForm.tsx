@@ -7,6 +7,7 @@ import { addCategory, addManufacturer, addProductCategory } from "@/lib/appwrite
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader2 } from 'lucide-react';
 
 // Define form data types
 type FormType = "category" | "manufacturer" | "productCategory";
@@ -20,6 +21,7 @@ type FormData = {
 export const AddForm = () => {
   const [formType, setFormType] = useState<FormType>("category");
   const [formData, setFormData] = useState<FormData>({ name: "", top: false, image: null });
+  const [isPending, setIsPending] = useState(false); // Added state for loading
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -29,6 +31,7 @@ export const AddForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsPending(true); // Set loading state
     try {
       if (formType === "category") {
         await addCategory({ name: formData.name, top: formData.top ?? false, image: formData.image });
@@ -43,6 +46,8 @@ export const AddForm = () => {
       setFormData({ name: "", top: false, image: null });
     } catch (error) {
       toast("Error adding data.");
+    } finally {
+      setIsPending(false); // Reset loading state
     }
   };
 
@@ -83,7 +88,8 @@ export const AddForm = () => {
                 <Label>Image</Label>
                 <Input type="file" accept="image/*" onChange={handleFileChange} />
               </div>
-              <Button type="submit">Add {formType === "category" ? "Category" : formType === "manufacturer" ? "Manufacturer" : "Product Category"}</Button>
+              <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="animate-spin mr-2" size={18} />}Add {formType === "category" ? "Category" : formType === "manufacturer" ? "Manufacturer" : "Product Category"}</Button>
             </form>
           </Tabs>
         </CardContent>
