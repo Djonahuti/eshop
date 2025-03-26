@@ -586,6 +586,7 @@ export const getUserDetails = async () => {
         admin_name: admin.admin_name,
         admin_email: admin.admin_email,
         admin_contact: admin.admin_contact,
+        admin_country: admin.admin_country,
         admin_job: admin.admin_job,
         admin_about: admin.admin_about,
       }));

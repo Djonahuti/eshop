@@ -16,6 +16,7 @@ import { PostForm } from "./components/shared/Forms/PostForm";
 import { AddForm } from "./components/shared/Forms/AddForm";
 import { AddImages } from "./components/shared/Forms/AddImages";
 import { Database } from "./_root/admin/pages/Database";
+import Profile from "./_root/admin/pages/Profile";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/add-form" element={<AddForm />} />
             <Route path="/dashboard" element={<DashboardContent />} />
             <Route path="/add-image" element={<AddImages />} />
+            <Route path="/account" element={<Profile />} />
             <Route path="/users" element={<Database />} />
             <Route path="/view-products" element={<Database />} />
             <Route path="/view-orders" element={<DataFetch />} />

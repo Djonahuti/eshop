@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sidebar"
 import { logout, getUserDetails } from "@/lib/appwrite"
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
 
 export function NavUser() {
@@ -41,7 +42,6 @@ export function NavUser() {
     const fetchUserDetails = async () => {
       try {
         const userDataArray = await getUserDetails();
-        console.log("User Data:", userDataArray); // Debugging log
 
         if (Array.isArray(userDataArray) && userDataArray.length > 0) {
           const userData = userDataArray[0]; // Extract first object from array
@@ -112,8 +112,9 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <UserCircleIcon />
-                Account
+                <Link to="/account" className="flex justify-between gap-2">
+                <UserCircleIcon />Account
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCardIcon />

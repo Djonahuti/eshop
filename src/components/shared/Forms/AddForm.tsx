@@ -47,49 +47,47 @@ export const AddForm = () => {
   };
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="@container/main flex flex-1 flex-col gap-2">
-        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-          <Card>
-            <CardHeader className="flex items-center gap-2 self-center font-medium">
-              <CardTitle className="flex items-center justify-center"><PlusCircleIcon />Quick Create</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs value={formType} onValueChange={(value) => setFormType(value as FormType)}>
-                <TabsList className="mb-4">
-                  <TabsTrigger value="category">Add Category</TabsTrigger>
-                  <TabsTrigger value="manufacturer">Add Manufacturer</TabsTrigger>
-                  <TabsTrigger value="productCategory">Add Product Category</TabsTrigger>
-                </TabsList>
-      
-                <form onSubmit={handleSubmit} className="space-y-4 p-6 shadow rounded-lg">
-                  <div className="space-y-2">
-                    <Label>Name</Label>
-                    <Input
-                      value={formData.name}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Top?</Label>
-                    <input
-                      type="checkbox"
-                      checked={formData.top}
-                      onChange={() => setFormData((prev) => ({ ...prev, top: !prev.top }))}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Image</Label>
-                    <Input type="file" accept="image/*" onChange={handleFileChange} />
-                  </div>
-                  <Button type="submit">Add {formType === "category" ? "Category" : formType === "manufacturer" ? "Manufacturer" : "Product Category"}</Button>
-                </form>
-              </Tabs>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+    <div className="p-6">
+      <Card>
+        <CardHeader className="flex items-center gap-2 self-center font-medium">
+          <CardTitle className="flex items-center justify-center"><PlusCircleIcon />Quick Create</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Tabs value={formType} onValueChange={(value) => setFormType(value as FormType)}>
+            <div className="flex justify-center items-center">
+            <TabsList className="mb-4">
+              <TabsTrigger value="category">Add Category</TabsTrigger>
+              <TabsTrigger value="manufacturer">Add Manufacturer</TabsTrigger>
+              <TabsTrigger value="productCategory">Add Product Category</TabsTrigger>
+            </TabsList>
+            </div>
+  
+            <form onSubmit={handleSubmit} className="space-y-4 p-6 shadow rounded-lg">
+              <div className="space-y-2">
+                <Label>Name</Label>
+                <Input
+                  value={formData.name}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Top?</Label>
+                <input
+                  type="checkbox"
+                  checked={formData.top}
+                  onChange={() => setFormData((prev) => ({ ...prev, top: !prev.top }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Image</Label>
+                <Input type="file" accept="image/*" onChange={handleFileChange} />
+              </div>
+              <Button type="submit">Add {formType === "category" ? "Category" : formType === "manufacturer" ? "Manufacturer" : "Product Category"}</Button>
+            </form>
+          </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 };
