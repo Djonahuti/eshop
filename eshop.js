@@ -59,9 +59,9 @@ const collections = [
             { key: 'product_img3', type: 'url' },
             { key: 'product_video', type: 'url' },
             { key: 'product_url', type: 'string' },
-            { key: 'p_cat_id', type: 'relationship', relatedCollection: 'product_categories' }, //Relationship (One-to-Many) → product_categories
-            { key: 'cat_id', type: 'relationship', relatedCollection: 'categories' }, //Relationship (One-to-Many) → categories
-            { key: 'manufacturer_id', type: 'relationship', relatedCollection: 'manufacturers' } //Relationship (One-to-Many) → manufacturers
+            { key: 'p_cat_id', type: 'relationship', relatedCollection: 'product_categories' }, //Relationship (Many-to-One) → product_categories
+            { key: 'cat_id', type: 'relationship', relatedCollection: 'categories' }, //Relationship (Many-to-One) → categories
+            { key: 'manufacturer_id', type: 'relationship', relatedCollection: 'manufacturers' } //Relationship (Many-to-One) → manufacturers
         ]
     },
     {
@@ -166,7 +166,7 @@ const collections = [
         name: 'Wishlist',
         id: 'wishlist',
         attributes: [
-            { key: 'customer_id', type: 'relationship', relatedCollection: 'customers' }, // Relationship (One-to-Many) → customers
+            { key: 'customer_id', type: 'relationship', relatedCollection: 'customers' }, // Relationship (One-to-One) → customers
             { key: 'product_id', type: 'relationship', relatedCollection: 'products' } // Relationship (one-to-Many) → products
         ]
     }
