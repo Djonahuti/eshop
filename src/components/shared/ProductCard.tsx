@@ -37,9 +37,11 @@ if (loading) return <p>Loading products...</p>;
             </div>
         <div className="flex justify-center gap-4 mt-3">
           <button className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">
+            {/* Add to Wishlist icon */}
             <Heart className="h-5 w-5 text-gray-600" />
           </button>
           <button className="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">
+          {/* Add to Cart icon */}
             <ShoppingCart className="h-5 w-5 text-gray-600" />
           </button>
         </div>
