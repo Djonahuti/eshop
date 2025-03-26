@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 //import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 const SigninForm = ({
   className,
@@ -14,18 +15,22 @@ const SigninForm = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false); // Added state for loading
   //const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsPending(true); // Set loading state
 
     try {
       await login(email, password);
       //navigate('/'); // Redirect after successful login
     } catch (err) {
       setError((err as Error).message);
+    } finally {
+      setIsPending(false); // Reset loading state
     }
   };
 
@@ -70,7 +75,8 @@ const SigninForm = ({
                 />
               </div>
               {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending && <Loader2 className="animate-spin mr-2" size={18} />}
                 Login
               </Button>
               <Button variant="outline" className="w-full">

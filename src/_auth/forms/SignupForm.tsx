@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 const SignupForm = ({
   className,
@@ -20,6 +21,7 @@ const SignupForm = ({
   const [country, setCountry] = useState('');
   const [customerImage, setCustomerImage] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false); // Added state for loading
   const navigate = useNavigate();
   const { signup } = useAuth();
 
@@ -32,12 +34,15 @@ const SignupForm = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsPending(true); // Set loading state
   
     try {
       await signup(email, password, customerName, phone, address, city, country, customerImage);
       navigate('/');
     } catch (err) {
       setError((err as Error).message);
+    } finally {
+      setIsPending(false); // Reset loading state
     }
   };
 
@@ -135,7 +140,8 @@ const SignupForm = ({
                 />
               </div>
               {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending && <Loader2 className="animate-spin mr-2" size={18} />}
                 Sign Up
               </Button>
               <Button variant="outline" className="w-full">
