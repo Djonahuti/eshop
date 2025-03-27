@@ -1,17 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  DndContext,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  type UniqueIdentifier,
-} from "@dnd-kit/core"
+
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
 import {
   SortableContext,
@@ -46,6 +36,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, UniqueIdentifier, useSensor, useSensors } from "@dnd-kit/core"
 
 interface DataTableProps<T> {
   columns: ColumnDef<T>[]
