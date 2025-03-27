@@ -1,26 +1,31 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { getProducts } from "@/lib/appwrite";
+import { getProducts, getProductsByManufacturer } from "@/lib/appwrite";
 import { ShoppingCart, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 
-export const ProductCard = () => {
+export const ProductCard = ({ manufacturerId }: { manufacturerId: string | null }) => {
 const [products, setProducts] = useState<any[]>([]);
 const [loading, setLoading] = useState(true);
 
 useEffect(() => {
-  getProducts().then((data) => {
-    setProducts(data);
-    setLoading(false);
-  });
-}, []);
+    setLoading(true);
+    const fetchProducts = async () => {
+      const data = manufacturerId ? await getProductsByManufacturer(manufacturerId) : await getProducts();
+      setProducts(data);
+      setLoading(false);
+    };
+    fetchProducts();
+  }, [manufacturerId]);
 
 if (loading) return <p>Loading products...</p>;
   return (
     <>
-    {products.map((product, index) => (
-    <Card key={index} className="w-full max-w-xs shadow-lg rounded-xl p-4">
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    {products.map((product) => (
+    <Card key={product.$id} className="w-full max-w-xs shadow-lg rounded-xl p-4">
       <div className="relative">
       <ImageSlider images={[product.product_img1, product.product_img2, product.product_img3].filter(Boolean)} />
         <div></div><span className="absolute top-2 right-2 bg-black text-white text-xs px-2 py-1 rounded">
@@ -48,6 +53,8 @@ if (loading) return <p>Loading products...</p>;
       </CardContent>
     </Card>
 ))}
+      </div>
+    </div>
     </>
   );
 };

@@ -1,12 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import Products from "./Products";
 import { displayManufacturers, displayProductCategories } from "@/lib/appwrite";
 import { useEffect, useState } from "react";
+import { ProductCard } from "@/components/shared/ProductCard";
 
 const Home = () => {
   const [pCategory, setPCategory] = useState<any[]>([]);
-  const [manufacturer, setManufacturer] = useState<any[]>([]);
+  const [manufacturer, setManufacturer] = useState<any[]>([]);const [selectedManufacturer, setSelectedManufacturer] = useState<string | null>(null);
+
+  const handleManufacturerClick = (manufacturerId: string) => {
+    setSelectedManufacturer(manufacturerId);
+  };
 
   //To fetch and display Manufacturers
   useEffect(() => {
@@ -52,12 +56,16 @@ const Home = () => {
       <p className="mt-2">Sale Ends: Mar 27, 07:59 (GMT+1)</p>
     </section>
 
-    {/* Brands Section */}
+    {/* Manufacturers Section */}
     <section className="p-4">
       <h3 className="text-accent-foreground font-bold mb-4">Brands</h3>
       <div className="grid grid-cols-5 md:grid-cols-9 gap-4">
-        {manufacturer.map((man, index) => (
-        <div key={index} className="bg-white rounded-lg p-4 shadow-md justify-items-center">
+        {manufacturer.map((man) => (
+        <div key={man.$id} className={`bg-white rounded-lg p-4 shadow-md justify-items-center cursor-pointer ${
+          selectedManufacturer === man.$id ? "border border-blue-500" : ""
+        }`}
+        onClick={() => handleManufacturerClick(man.$id)}
+      >
           <img src={man.manufacturer_image} alt="deals" className="rounded-lg h-12 w-12" />
         </div>
     
@@ -78,7 +86,7 @@ const Home = () => {
       </div>
     </section>
 
-    <section className="p-5"><Products /></section>
+    <section className="p-5"><ProductCard manufacturerId={selectedManufacturer} /></section>
     
     </div>
     </>

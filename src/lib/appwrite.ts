@@ -7,6 +7,8 @@ const DB_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const ADMIN_COLLECTION_ID = import.meta.env.VITE_APPWRITE_ADMIN_COLLECTION_ID;
 const CUSTOMERS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_CUSTOMERS_COLLECTION_ID;
 const ORDERS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_ORDERS_COLLECTION_ID;
+const MF_ID = import.meta.env.VITE_APPWRITE_MANUFACTURERS_COLLECTION_ID;
+const PD_ID = import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID;
 
 client
   .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT) // API endpoint
@@ -678,7 +680,7 @@ export async function displayManufacturers() {
   try {
     const man = await databases.listDocuments(
       import.meta.env.VITE_APPWRITE_DATABASE_ID,
-      import.meta.env.VITE_APPWRITE_MANUFACTURERS_COLLECTION_ID
+      MF_ID
     );
 
     return man.documents.map(man => ({
@@ -719,6 +721,23 @@ export async function displayManufacturers() {
 //       return [];
 //     }
 // };
+
+export const getProductsByManufacturer = async (manufacturerId: string) => {
+  try {
+    const response = await databases.listDocuments(
+      DB_ID,
+      PD_ID!,
+      [
+        Query.equal("manufacturer_id", manufacturerId),
+      ]
+    );
+    return response.documents;
+  } catch (error) {
+    console.error("Error fetching products by manufacturer:", error);
+    return [];
+  }
+};
+
 
 
 
