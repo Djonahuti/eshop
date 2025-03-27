@@ -1,23 +1,36 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { getProducts, getProductsByManufacturer } from "@/lib/appwrite";
+import { getProducts, getProductsByManufacturer, getProductsByProductCategory } from "@/lib/appwrite";
 import { ShoppingCart, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 
-export const ProductCard = ({ manufacturerId }: { manufacturerId: string | null }) => {
+export const ProductCard = ({
+  manufacturerId,
+  pCatId,
+}: {
+  manufacturerId: string | null;
+  pCatId: string | null;
+}) => {
 const [products, setProducts] = useState<any[]>([]);
 const [loading, setLoading] = useState(true);
 
 useEffect(() => {
-    setLoading(true);
-    const fetchProducts = async () => {
-      const data = manufacturerId ? await getProductsByManufacturer(manufacturerId) : await getProducts();
-      setProducts(data);
-      setLoading(false);
-    };
-    fetchProducts();
-  }, [manufacturerId]);
+  setLoading(true);
+  const fetchProducts = async () => {
+    let data = [];
+    if (manufacturerId) {
+      data = await getProductsByManufacturer(manufacturerId);
+    } else if (pCatId) {
+      data = await getProductsByProductCategory(pCatId);
+    } else {
+      data = await getProducts();
+    }
+    setProducts(data);
+    setLoading(false);
+  };
+  fetchProducts();
+}, [manufacturerId, pCatId]); // Track changes in both filters
 
 if (loading) return <p>Loading products...</p>;
   return (

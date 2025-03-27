@@ -738,6 +738,20 @@ export const getProductsByManufacturer = async (manufacturerId: string) => {
   }
 };
 
+export const getProductsByProductCategory = async (pCatId: string) => {
+  try {
+    const response = await databases.listDocuments(
+      DB_ID,
+      PD_ID!,
+      [Query.equal("p_cat_id", pCatId)] // Ensure "category_id" matches your schema
+    );
+    return response.documents;
+  } catch (error) {
+    console.error("Error fetching products by product category:", error);
+    return [];
+  }
+};
+
 
 
 

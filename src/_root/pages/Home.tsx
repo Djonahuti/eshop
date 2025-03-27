@@ -1,15 +1,28 @@
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { FilterIcon } from "lucide-react";
 import { displayManufacturers, displayProductCategories } from "@/lib/appwrite";
 import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/shared/ProductCard";
 
 const Home = () => {
   const [pCategory, setPCategory] = useState<any[]>([]);
-  const [manufacturer, setManufacturer] = useState<any[]>([]);const [selectedManufacturer, setSelectedManufacturer] = useState<string | null>(null);
+  const [manufacturer, setManufacturer] = useState<any[]>([]);
+  const [selectedManufacturer, setSelectedManufacturer] = useState<string | null>(null);
+  const [selectedProductCategory, setSelectedProductCategory] = useState<string | null>(null);
 
   const handleManufacturerClick = (manufacturerId: string) => {
     setSelectedManufacturer(manufacturerId);
+    setSelectedProductCategory(null); // Reset category when manufacturer is selected
+  };
+  
+  const handleProductCategoryClick = (pCatId: string) => {
+    setSelectedProductCategory(pCatId);
+    setSelectedManufacturer(null); // Reset manufacturer when Product category is selected
+  };
+  
+  const resetFilters = () => {
+    setSelectedManufacturer(null);
+    setSelectedProductCategory(null);
   };
 
   //To fetch and display Manufacturers
@@ -37,8 +50,11 @@ const Home = () => {
 
     <div className="bg-[#222F3D] h-10 flex items-center text-white text-sm pl-4">
         <div className="flex items-center gap-1 border border-transparent p-2 hover:border-white">
-        <Button variant="ghost">
-          <Menu size={24} />
+        <Button
+          variant="ghost"
+          onClick={resetFilters}
+        >
+          <FilterIcon size={24} />
         </Button>
             <p className="font-bold">All</p>
         </div>
@@ -77,8 +93,12 @@ const Home = () => {
     <section className="p-4">
       <h3 className="text-accent-foreground font-bold mb-4">Categories</h3>
       <div className="grid grid-cols-5 md:grid-cols-9 gap-4">
-        {pCategory.map((pCat, index) => (
-        <div key={index} className="bg-white p-4 rounded-lg shadow-md justify-items-center">
+        {pCategory.map((pCat) => (
+        <div key={pCat.$id} className={`bg-white rounded-lg p-4 shadow-md justify-items-center cursor-pointer ${
+          selectedProductCategory === pCat.$id ? "border border-green-500" : ""
+        }`}
+        onClick={() => handleProductCategoryClick(pCat.$id)}
+      >
           <img src={pCat.p_cat_image} alt="deals" className="rounded-lg h-12 w-12" />
         </div>
 
@@ -86,7 +106,9 @@ const Home = () => {
       </div>
     </section>
 
-    <section className="p-5"><ProductCard manufacturerId={selectedManufacturer} /></section>
+    <section className="p-5">
+      <div><ProductCard manufacturerId={selectedManufacturer} pCatId={selectedProductCategory} /></div>
+      </section>
     
     </div>
     </>
